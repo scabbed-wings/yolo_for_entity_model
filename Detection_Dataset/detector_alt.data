@@ -1,0 +1,5 @@
+classes=3
+valid=Detection_Dataset/valid.txt
+names=Detection_Dataset/classes.names
+backup=/mydrive/yolov3/backup_tiny/
+train=Detection_Dataset/train.txt
