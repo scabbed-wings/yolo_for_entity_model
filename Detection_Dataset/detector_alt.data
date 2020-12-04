@@ -1,4 +1,4 @@
-classes=3
+classes=4
 valid=Detection_Dataset/valid.txt
 names=Detection_Dataset/classes.names
 backup=backup
