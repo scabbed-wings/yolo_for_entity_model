@@ -1,5 +1,5 @@
 classes=4
 valid=Detection_Dataset/valid.txt
 names=Detection_Dataset/classes.names
-backup=/mydrive/yolov3/backup/
+backup=../drive/MyDrive/yolov3/backup/
 train=Detection_Dataset/train.txt
