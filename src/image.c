@@ -256,7 +256,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                     strcat(labelstr, names[j]);
 					strcat(labelstr, num_element);
                 }
-                printf("%s %s: %.0f%%\n", names[j], num_element dets[i].prob[j]*100);
+                printf("%s %s: %.0f%%\n", names[j], num_element, dets[i].prob[j]*100);
             }
         }
         if(class >= 0){
