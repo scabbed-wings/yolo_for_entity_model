@@ -251,7 +251,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                     strcat(labelstr, names[j]);
 					strcat(labelstr,num_element);
                     class = j;
-					dets[i].bbox.ind_class = j
+					dets[i].bbox.ind_class = j;
                 } else {
                     strcat(labelstr, ", ");
                     strcat(labelstr, names[j]);
