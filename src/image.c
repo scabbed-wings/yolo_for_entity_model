@@ -251,6 +251,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                     strcat(labelstr, names[j]);
 					strcat(labelstr,num_element);
                     class = j;
+					dets[i].bbox.ind_class = j
                 } else {
                     strcat(labelstr, ", ");
                     strcat(labelstr, names[j]);
@@ -282,7 +283,8 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             rgb[1] = green;
             rgb[2] = blue;
             box b = dets[i].bbox;
-            //printf("%f %f %f %f\n", b.x, b.y, b.w, b.h);
+            
+			printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
 
             int left  = (b.x-b.w/2.)*im.w;
             int right = (b.x+b.w/2.)*im.w;
