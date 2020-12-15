@@ -240,29 +240,23 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 {
     int i,j;
 	relations obt_relations[num];
+	
+	for(i=0; i< num; ++i){
+		dets[i].bbox.ind_class = -1;
+		for(j = 0; j < classes; ++j){
+            if (dets[i].prob[j] > thresh) dets[i].bbox.ind_class = j;
+	}
 
     for(i = 0; i < num; ++i){
         char labelstr[4096] = {0};
 		char num_element[50];
 		sprintf(num_element, "%d", i);
-        int class = -1;
-        for(j = 0; j < classes; ++j){
-            if (dets[i].prob[j] > thresh){
-                if (class < 0) {
-                    strcat(labelstr, names[j]);
-					strcat(labelstr,num_element);
-                    class = j;
-					dets[i].bbox.ind_class = j;
-                } else {
-                    strcat(labelstr, ", ");
-                    strcat(labelstr, names[j]);
-					strcat(labelstr, num_element);
-                }
-                printf("%s %s: %.0f%%\n", names[j], num_element, dets[i].prob[j]*100);
-            }
-        }
-        if(class >= 0){
+
+        if(dets[i].bbox.ind_class >= 0){
             int width = im.h * .006;
+			strcat(labelstr, names[dets[i].bbox.ind_class]);
+			strcat(labelstr,num_element);
+			printf("%s %s: %.0f%%\n", names[dets[i].bbox.ind_class], num_element, dets[i].prob[j]*100);
 
             /*
                if(0){
