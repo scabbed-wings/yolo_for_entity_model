@@ -245,6 +245,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 		dets[i].bbox.ind_class = -1;
 		for(j = 0; j < classes; ++j){
             if (dets[i].prob[j] > thresh) dets[i].bbox.ind_class = j;
+		}
 	}
 
     for(i = 0; i < num; ++i){
