@@ -517,6 +517,11 @@ typedef struct{
 	int ind_class;
 } box;
 
+typedef struct {
+	int ind_entrada, ind_salida;
+	float dist;
+}relations;
+
 typedef struct detection{
     box bbox;
     int classes;

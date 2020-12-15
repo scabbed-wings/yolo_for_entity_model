@@ -239,6 +239,7 @@ image **load_alphabet()
 void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes)
 {
     int i,j;
+	relations obt_relations[num];
 
     for(i = 0; i < num; ++i){
         char labelstr[4096] = {0};
@@ -284,14 +285,14 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             rgb[2] = blue;
             box b = dets[i].bbox;
             
-			//printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
+			printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
 
             int left  = (b.x-b.w/2.)*im.w;
             int right = (b.x+b.w/2.)*im.w;
             int top   = (b.y-b.h/2.)*im.h;
             int bot   = (b.y+b.h/2.)*im.h;
 			
-			printf("Left: %d , Right: %d , Top: %d , Bottom: %d \n", left, right, top, bot);
+			//printf("Left: %d , Right: %d , Top: %d , Bottom: %d \n", left, right, top, bot);
 
             if(left < 0) left = 0;
             if(right > im.w-1) right = im.w-1;
