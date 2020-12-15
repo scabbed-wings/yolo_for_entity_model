@@ -266,7 +266,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
              */
 
             //printf("%d %s: %.0f%%\n", i, names[class], prob*100);
-            int offset = class*123457 % classes;
+            int offset = dets[i].bbox.ind_class*123457 % classes;
             float red = get_color(2,offset,classes);
             float green = get_color(1,offset,classes);
             float blue = get_color(0,offset,classes);
