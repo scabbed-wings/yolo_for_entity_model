@@ -256,7 +256,7 @@ float * init_locations(box bbox, int im_dim[2]){
 	width = x2 - x1;
 	height = y2-y1;
 	
-	printf("x1: %.2f, x2: %.2f, y1: %.2f, y2: %.2f, width: %.2f, height: %.2f", x1,x2,y1,y2,width,height);
+	//printf("x1: %.2f, x2: %.2f, y1: %.2f, y2: %.2f, width: %.2f, height: %.2f", x1,x2,y1,y2,width,height);
 	
 	//box1_pos=[x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7,x8,y8];
 	float box_pos [16]={x1,y1, x1+width/2.,y1, x2,y1, x2,y1 +height/2., x2,y2, x1+width/2.,y2, x1,y2, x1,y1+height/2.};
@@ -270,6 +270,14 @@ void find_relations(relations *obt_relations, detection *dets, box bbox, int im_
 	float *box1_pos, *box2_pos;
 	
 	box1_pos = init_locations(bbox, im_dim);
+	
+	printf("Bbox element %d \n", bbox.ind_class);
+	for(i=0; i<16; i++){
+		printf("Pos: %d, value: %.2f  ", i, *(box1_pos + i) );
+	}
+	
+	printf("\n");
+	
 	
 	for(i=0;i<cont_elem;i++){
 		int ind = elem[i];
