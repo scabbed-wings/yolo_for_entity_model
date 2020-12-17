@@ -298,7 +298,8 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 {
     int i,j;
 	int cont_elem = 0;
-	int elem[num] = {-1};
+	int elem[num];
+	elem={-1};
 	int im_dim[2]={im.w, im.h};
 	
 	
