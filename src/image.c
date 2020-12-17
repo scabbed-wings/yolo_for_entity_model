@@ -236,17 +236,88 @@ image **load_alphabet()
     return alphabets;
 }
 
+short used_attribute(relations *relations, int index, int cont_elem){//Find if an attribute is connected
+	int i;
+	short find = 0;
+	for(i =0; i<cont_elem; i++){
+		if(relations[i].ind_entrada == index || relations[i].ind_salida == index) find = 1;
+	}
+	return find;
+}
+
+float * init_locations(box bbox, int im_dim[2]){
+	float x1,y1,x2,y2, width, height;
+	
+	x1 = (bbox.x-bbox.w/2.)*im_dim[0];
+	x2 = (bbox.x+bbox.w/2.)*im_dim[0];
+	y1 = (bbox.y-bbox.h/2.)*im_dim[1];
+	y2 = (bbox.y+bbox.h/2.)*im_dim[1];
+	
+	width = x2 - x1;
+	height = y2-y1;
+	
+	printf("x1: %d, x2: %d, y1: %d, y2: %d, width: %d, height: %d", x1,x2,y1,y2,width,height);
+	
+	//box1_pos=[x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7,x8,y8];
+	float static box_pos [16]={x1,y1, x1+width/2.,y1, x2,y1, x2,y1 +height/2., x2,y2, x1+width/2.,y2, x1,y2, x1,y1+height/2.};
+	
+	return box_pos;
+}
+
+void find_relations(relations *obt_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
+	int i,j;
+	
+	float *box1_pos, *box2_pos;
+	
+	box1_pos = init_locations(bbox, im_dim);
+	
+	for(i=0;i<cont_elem;i++){
+		ind = elem[i];
+		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
+			short find = used_attribute(obt_relations, ind, cont_elem);
+			if(!find){
+				box2_pos = init_locations(dets[ind].bbox, im_dim);
+				
+			}
+		}
+	}
+	
+	
+}
+
+void init_relations(relations *relations, int cont_elem){
+	int i;
+	for(i=0; i<cont_elem ; i++){
+		relations[i].ind_entrada = -1;
+		relations[i].ind_salida = -1;
+		relations[i].dist =-1.0;
+	}
+}
+
 void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes)
 {
     int i,j;
-	relations obt_relations[num];
+	int cont_elem = 0;
+	int elem[num] = {-1};
+	int im_dim[2]={im.w, im.h};
+	
 	
 	for(i=0; i< num; ++i){
 		dets[i].bbox.ind_class = -1;
+		dets[i].bbox.id_box = i;
 		for(j = 0; j < classes; ++j){
-            if (dets[i].prob[j] > thresh) dets[i].bbox.ind_class = j;
+            if (dets[i].prob[j] > thresh) {
+				dets[i].bbox.ind_class = j;
+				if( (2 >= j) && (j >=0)){
+					elem[cont_elem] = i;
+					cont_elem++;
+				}
+			}
 		}
 	}
+	
+	relations obt_relations[cont_elem];
+	init_relations(obt_relations, cont_elem);
 
     for(i = 0; i < num; ++i){
         char labelstr[4096] = {0};
@@ -257,7 +328,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             int width = im.h * .006;
 			strcat(labelstr, names[dets[i].bbox.ind_class]);
 			strcat(labelstr,num_element);
-			printf("%s %s: %.0f%%\n", names[dets[i].bbox.ind_class], num_element, dets[i].prob[j]*100);
+			printf("%s %s: %.0f%%\n", names[dets[i].bbox.ind_class], num_element, dets[i].prob[dets[i].bbox.ind_class]*100);
 
             /*
                if(0){
@@ -279,8 +350,10 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             rgb[1] = green;
             rgb[2] = blue;
             box b = dets[i].bbox;
+			
+			find_relations(obt_relations, dets, b, im_dim, elem, cont_elem);
             
-			printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
+			//printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
 
             int left  = (b.x-b.w/2.)*im.w;
             int right = (b.x+b.w/2.)*im.w;

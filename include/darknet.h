@@ -514,7 +514,7 @@ typedef struct {
 
 typedef struct{
     float x, y, w, h;
-	int ind_class;
+	int ind_class, id_box;
 } box;
 
 typedef struct {
