@@ -299,9 +299,11 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
     int i,j;
 	int cont_elem = 0;
 	int elem[num];
-	elem={-1};
 	int im_dim[2]={im.w, im.h};
 	
+	for(i=0; i<num; i++){
+		elem[i]=-1;
+	}
 	
 	for(i=0; i< num; ++i){
 		dets[i].bbox.ind_class = -1;
