@@ -259,7 +259,7 @@ float * init_locations(box bbox, int im_dim[2]){
 	printf("x1: %.2f, x2: %.2f, y1: %.2f, y2: %.2f, width: %.2f, height: %.2f", x1,x2,y1,y2,width,height);
 	
 	//box1_pos=[x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7,x8,y8];
-	float static box_pos [16]={x1,y1, x1+width/2.,y1, x2,y1, x2,y1 +height/2., x2,y2, x1+width/2.,y2, x1,y2, x1,y1+height/2.};
+	float box_pos [16]={x1,y1, x1+width/2.,y1, x2,y1, x2,y1 +height/2., x2,y2, x1+width/2.,y2, x1,y2, x1,y1+height/2.};
 	
 	return box_pos;
 }
