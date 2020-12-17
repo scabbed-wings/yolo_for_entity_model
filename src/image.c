@@ -272,9 +272,9 @@ void find_relations(relations *obt_relations, detection *dets, box bbox, int im_
 	box1_pos = init_locations(bbox, im_dim);
 	
 	printf("Bbox element %d \n", bbox.ind_class);
-	for(i=0; i<16; i++){
-		printf("Pos: %d, value: %.2f  ", i, *(box1_pos + i) );
-	}
+	//for(i=0; i<16; i++){
+		//printf("Pos: %d, value: %.2f  ", i, *(box1_pos + i) );
+	//}
 	
 	printf("\n");
 	
