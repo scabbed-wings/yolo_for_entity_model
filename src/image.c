@@ -247,6 +247,7 @@ short used_attribute(relations *relations, int index, int cont_elem){//Find if a
 
 float * init_locations(box bbox, int im_dim[2]){
 	float x1,y1,x2,y2, width, height;
+	int i;
 	
 	x1 = (bbox.x-bbox.w/2.)*im_dim[0];
 	x2 = (bbox.x+bbox.w/2.)*im_dim[0];
@@ -256,10 +257,64 @@ float * init_locations(box bbox, int im_dim[2]){
 	width = x2 - x1;
 	height = y2-y1;
 	
+	//box1_pos=[x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7,x8,y8];
+	float static box_pos [16];
+	
 	//printf("x1: %.2f, x2: %.2f, y1: %.2f, y2: %.2f, width: %.2f, height: %.2f", x1,x2,y1,y2,width,height);
 	
-	//box1_pos=[x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7,x8,y8];
-	float box_pos [16]={x1,y1, x1+width/2.,y1, x2,y1, x2,y1 +height/2., x2,y2, x1+width/2.,y2, x1,y2, x1,y1+height/2.};
+	for(i=0; i<16; i++){
+		switch(i){
+			case 0:
+				box_pos[0] = x1;
+				break;
+			case 1:
+				box_pos[1] = y1;
+				break;
+			case 2:
+				box_pos[2] = x1+width/2.;
+				break;
+			case 3:
+				box_pos[3] = y1;
+				break;
+			case 4:
+				box_pos[4] = x2;
+				break;
+			case 5:
+				box_pos[5] = y1;
+				break;
+			case 6:
+				box_pos[6] = x2;
+				break;
+			case 7:
+				box_pos[7] = y1 +height/2.;
+				break;
+			case 8:
+				box_pos[8] = x2;
+				break;
+			case 9:
+				box_pos[9] = y2;
+				break;
+			case 10:
+				box_pos[10] = x1+width/2.;
+				break;
+			case 11:
+				box_pos[11] =y2;
+				break;
+			case 12:
+				box_pos[12] = x1;
+				break;
+			case 13:
+				box_pos[13] = y2;
+				break;
+			case 14:
+				box_pos[14] = x1;
+				break;
+			case 15:
+				box_pos[15] = y1+height/2.;
+				break;
+		}
+	}
+	
 	
 	return box_pos;
 }
@@ -272,9 +327,9 @@ void find_relations(relations *obt_relations, detection *dets, box bbox, int im_
 	box1_pos = init_locations(bbox, im_dim);
 	
 	printf("Bbox element %d \n", bbox.ind_class);
-	//for(i=0; i<16; i++){
-		//printf("Pos: %d, value: %.2f  ", i, *(box1_pos + i) );
-	//}
+	for(i=0; i<16; i++){
+		printf("Pos: %d, value: %.2f  ", i, *(box1_pos + i) );
+	}
 	
 	printf("\n");
 	
