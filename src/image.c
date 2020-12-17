@@ -272,7 +272,7 @@ void find_relations(relations *obt_relations, detection *dets, box bbox, int im_
 	box1_pos = init_locations(bbox, im_dim);
 	
 	for(i=0;i<cont_elem;i++){
-		ind = elem[i];
+		int ind = elem[i];
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
 			if(!find){
