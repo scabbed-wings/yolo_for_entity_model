@@ -373,10 +373,10 @@ double box_min_distance(double *box1_pos, double *box2_pos){
 	return aux;
 }
 
-void min_dist_array(box *possible_dist, box bbox){
+void min_dist_array(box possible_dist[], box bbox){
 	int i, max_ind;
 	max_ind = -1;
-	double max_dist;
+	double max_dist =0;
 	for(i =0 ; i < 5; i++){
 		if(max_ind == -1){
 			max_ind = i;
@@ -388,7 +388,7 @@ void min_dist_array(box *possible_dist, box bbox){
 		}
 	}
 	if(bbox.dist < max_dist){
-		possible_dist[i] = bbox;
+		possible_dist[max_ind] = bbox;
 	}
 }
 
@@ -433,7 +433,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 					}
 					else{
 						dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
-						printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox.dist);
+						//printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox.dist);
 						min_dist_array(possible_dist, dets[ind].bbox);
 					}
 				}
