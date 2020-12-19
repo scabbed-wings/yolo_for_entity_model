@@ -346,7 +346,7 @@ short intersection_box(double *box1_pos, double *box2_pos){
 
 double box_min_distance(double *box1_pos, double *box2_pos){
 	double dist;
-	double aux == -1;
+	double aux = -1;
 	int i,j;
 	i=0;
 	while(i<16){
