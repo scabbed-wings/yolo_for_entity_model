@@ -440,9 +440,9 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		}	
 	}
 	
-	//for(i=0; i< 5 ;i++){
-		//printf("Bbox id: %d, Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
-	//}
+	for(i=0; i< 5 ;i++){
+		printf("Bbox id: %d, Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
+	}
 	
 	
 }
@@ -487,10 +487,13 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	init_relations(obt_relations, cont_elem);
 
     for(i = 0; i < num; ++i){
-        char labelstr[4096] = {0};
+        printf("Smash time 1!!!\n");
+		char labelstr[4096] = {0};
+		printf("Smash time 2!!!\n");
 		char num_element[100];
+		printf("Smash time 3!!!\n");
 		sprintf(num_element, "%d", i);
-		printf("Smash time 1!!!\n");
+		
 
         if(dets[i].bbox.ind_class >= 0){
             int width = im.h * .006;
