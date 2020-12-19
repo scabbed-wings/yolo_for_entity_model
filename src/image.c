@@ -394,7 +394,7 @@ void min_dist_array(box *possible_dist, box bbox){
 
 void find_relations(relations *obt_relations, relations *pos_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
 	int i;
-	double box1_pos[16], box2_pos[16];
+	double box1_pos[16];
 	int possible_inter[5]={-1};
 	box possible_dist[5];
 	int cont_inter = 0;
@@ -414,6 +414,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		int ind = elem[i];
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
+			double box2_pos[16];
 			init_locations(dets[ind].bbox, im_dim, box2_pos);
 			if(!find){
 				if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
@@ -518,9 +519,9 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             rgb[2] = blue;
             box b = dets[i].bbox;
 			
-			//if(b.ind_class == 3){
-				//find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
-			//}
+			if(b.ind_class == 3){
+				find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
+			}
 			
 			
             
