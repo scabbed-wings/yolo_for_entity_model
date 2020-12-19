@@ -487,11 +487,8 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	init_relations(obt_relations, cont_elem);
 
     for(i = 0; i < num; ++i){
-        printf("Smash time 1!!!\n");
 		char labelstr[4096] = {0};
-		printf("Smash time 2!!!\n");
-		char num_element[100];
-		printf("Smash time 3!!!\n");
+		char num_element[25];
 		sprintf(num_element, "%d", i);
 		
 
@@ -525,7 +522,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 			if(b.ind_class == 3){
 				find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
 			}
-			
+			printf("Smash time 1!!!\n");
 			
             
 			//printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
@@ -543,10 +540,14 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             if(bot > im.h-1) bot = im.h-1;
 
             draw_box_width(im, left, top, right, bot, width, red, green, blue);
+			printf("Smash time 2!!!\n");
             if (alphabet) {
                 image label = get_label(alphabet, labelstr, (im.h*.03));
+				printf("Smash time 3!!!\n");
                 draw_label(im, top + width, left, label, rgb);
+				printf("Smash time 4!!!\n");
                 free_image(label);
+				printf("Smash time 5!!!\n");
             }
             if (dets[i].mask){
                 image mask = float_to_image(14, 14, 1, dets[i].mask);
