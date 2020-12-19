@@ -245,7 +245,7 @@ short used_attribute(relations *relations, int index, int cont_elem){//Find if a
 	return find;
 }
 
-double * init_locations(box bbox, int im_dim[2]){
+void init_locations(box bbox, int im_dim[2], double box_pos[] ){
 	float x1,y1,x2,y2, width, height;
 	int i;
 	
@@ -258,7 +258,6 @@ double * init_locations(box bbox, int im_dim[2]){
 	height = y2-y1;
 	
 	//box1_pos=[x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7,x8,y8];
-	double static box_pos [16];
 	
 	//printf("x1: %.2f, x2: %.2f, y1: %.2f, y2: %.2f, width: %.2f, height: %.2f", x1,x2,y1,y2,width,height);
 	
@@ -314,9 +313,6 @@ double * init_locations(box bbox, int im_dim[2]){
 				break;
 		}
 	}
-	
-	
-	return box_pos;
 }
 
 int fill_count(relations *list_relations, int cont_elem){
@@ -329,17 +325,17 @@ int fill_count(relations *list_relations, int cont_elem){
 }
 
 
-short intersection_box(double *box1_pos, double *box2_pos){
+short intersection_box(double box1_pos[], double box2_pos[]){
 	short find = 0;
 	
-	if(*(box1_pos+0) <= *(box2_pos + 0) && *(box2_pos +0) <= *(box1_pos +8)){
-		if((*(box1_pos + 1) <= *(box2_pos + 1) && *(box2_pos + 1) <= *(box1_pos + 9)) || (*(box1_pos + 1) >= *(box2_pos +1) && *(box1_pos + 1) <= *(box2_pos + 9))){
+	if(box1_pos[0] <= box2_pos[0] && box2_pos[0] <= box1_pos[8]){
+		if((box1_pos[1] <= box2_pos[1] && box2_pos[1] <= box1_pos[9]) || (box1_pos[1] >= box2_pos[1] && box1_pos[1] <= box2_pos[9])){
 			find = 1;
 			printf(" FIND1: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n", *(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9));
 		}
 	}
-	else if(*(box2_pos+0) <= *(box1_pos + 0) && *(box1_pos +0) <= *(box2_pos +8)){
-		if((*(box2_pos + 1) <= *(box1_pos + 1) && *(box1_pos + 1) <= *(box2_pos + 9)) || (*(box2_pos + 1) >= *(box1_pos +1) && *(box2_pos + 1) <= *(box1_pos + 9))){
+	else if(box2_pos[0] <= box1_pos[0] && box1_pos[0] <= box2_pos[8]){
+		if((box2_pos[1] <= box1_pos[1] && box1_pos[1] <= box2_pos[9]) || (box2_pos[1] >= box1_pos[1] && box2_pos[1] <= box1_pos[9])){
 			find = 1;
 			printf("FIND2: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n",*(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9) );
 		}
@@ -398,7 +394,7 @@ void min_dist_array(box *possible_dist, box bbox){
 
 void find_relations(relations *obt_relations, relations *pos_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
 	int i;
-	double *box1_pos, *box2_pos;
+	double box1_pos[16], box2_pos[16];
 	int possible_inter[5];
 	box possible_dist[5];
 	int cont_inter = 0;
