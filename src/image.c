@@ -516,7 +516,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             rgb[0] = red;
             rgb[1] = green;
             rgb[2] = blue;
-            box b = dets[ind].bbox;
+            box b = dets[i].bbox;
 			
 			if(b.ind_class == 3){
 				find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
