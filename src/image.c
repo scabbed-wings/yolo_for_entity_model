@@ -240,6 +240,7 @@ short used_attribute(relations *relations, int index, int cont_elem){//Find if a
 	int i;
 	short find = 0;
 	for(i =0; i<cont_elem; i++){
+		printf("Smash time 11!!!\n");
 		if(relations[i].ind_entrada == index || relations[i].ind_salida == index) find = 1;
 	}
 	return find;
@@ -262,6 +263,7 @@ void init_locations(box bbox, int im_dim[2], double box_pos[] ){
 	//printf("x1: %.2f, x2: %.2f, y1: %.2f, y2: %.2f, width: %.2f, height: %.2f", x1,x2,y1,y2,width,height);
 	
 	for(i=0; i<16; i++){
+		printf("Smash time 10!!!\n");
 		switch(i){
 			case 0:
 				box_pos[0] = x1;
@@ -379,10 +381,12 @@ void min_dist_array(box *possible_dist, box bbox){
 	double max_dist;
 	for(i =0 ; i < 5; i++){
 		if(max_ind == -1){
+			printf("Smash time 8!!!\n");
 			max_ind = i;
 			max_dist = possible_dist[i].dist;
 		}
 		else if(possible_dist[i].dist > max_dist){
+			printf("Smash time 9!!!\n");
 			max_ind = i;
 			max_dist = possible_dist[i].dist;
 		}
@@ -401,7 +405,11 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	int cont_dist = 0;
 	double dist;
 	
+	printf("Smash time 1!!!\n");
+	
 	init_locations(bbox, im_dim, box1_pos);
+	
+	printf("Smash time 2!!!\n");
 	
 	//printf("Bbox element %d \n", bbox.ind_class);
 	//for(i=0; i<16; i++){
@@ -415,21 +423,25 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
 			double box2_pos[16];
+			printf("Smash time 3!!!\n");
 			init_locations(dets[ind].bbox, im_dim, box2_pos);
 			if(!find){
 				if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
+					printf("Smash time 4!!!\n");
 					possible_inter[cont_inter] = ind;
 					cont_inter++;
-					//printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
+					printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
 				}
 				else{
 					if(cont_dist < 5){
+						printf("Smash time 5!!!\n");
 						dist = box_min_distance(box1_pos, box2_pos);
 						possible_dist[cont_dist] = dets[ind].bbox;
 						possible_dist[cont_dist].dist = dist;
 						cont_dist++;
 					}
 					else{
+						printf("Smash time 6!!!\n");
 						dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
 						min_dist_array(possible_dist, dets[ind].bbox);
 					}
