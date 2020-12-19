@@ -341,6 +341,7 @@ short intersection_box(double *box1_pos, double *box2_pos){
 		if((*(box2_pos + 1) <= *(box1_pos + 1) && *(box1_pos + 1) <= *(box2_pos + 9)) || (*(box2_pos + 1) >= *(box1_pos +1) && *(box2_pos + 1) <= *(box1_pos + 9))){
 			find = 1;
 		}
+	}
 	return find;
 }
 
