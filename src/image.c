@@ -335,13 +335,13 @@ short intersection_box(double *box1_pos, double *box2_pos){
 	if(*(box1_pos+0) <= *(box2_pos + 0) && *(box2_pos +0) <= *(box1_pos +8)){
 		if((*(box1_pos + 1) <= *(box2_pos + 1) && *(box2_pos + 1) <= *(box1_pos + 9)) || (*(box1_pos + 1) >= *(box2_pos +1) && *(box1_pos + 1) <= *(box2_pos + 9))){
 			find = 1;
-			printf(" FIND1: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n", *(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9));
+			printf(" FIND1: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n", *(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9));
 		}
 	}
 	else if(*(box2_pos+0) <= *(box1_pos + 0) && *(box1_pos +0) <= *(box2_pos +8)){
 		if((*(box2_pos + 1) <= *(box1_pos + 1) && *(box1_pos + 1) <= *(box2_pos + 9)) || (*(box2_pos + 1) >= *(box1_pos +1) && *(box2_pos + 1) <= *(box1_pos + 9))){
 			find = 1;
-			printf("FIND2: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n",*(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9) );
+			printf("FIND2: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n",*(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9) );
 		}
 	}
 	
