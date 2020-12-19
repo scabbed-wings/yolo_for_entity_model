@@ -341,7 +341,7 @@ short intersection_box(double *box1_pos, double *box2_pos){
 		if((*(box2_pos + 1) <= *(box1_pos + 1) && *(box1_pos + 1) <= *(box2_pos + 9)) || (*(box2_pos + 1) >= *(box1_pos +1) && *(box2_pos + 1) <= *(box1_pos + 9))){
 			find = 1;
 		}
-	return find;.
+	return find;
 }
 
 double box_min_distance(double *box1_pos, double *box2_pos){
@@ -417,6 +417,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 				if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
 					possible_inter[cont_inter] = ind;
 					cont_inter++;
+					printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
 				}
 				else{
 					if(cont_dist < 5){
@@ -435,6 +436,10 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 			}
 		}	
 
+	}
+	
+	for(i=0; i< 5 ;i++){
+		printf("Bbox id: %d, Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
 	}
 	
 	
