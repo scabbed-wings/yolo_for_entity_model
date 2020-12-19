@@ -331,7 +331,7 @@ short intersection_box(double box1_pos[], double box2_pos[]){
 	if(box1_pos[0] <= box2_pos[0] && box2_pos[0] <= box1_pos[8]){
 		if((box1_pos[1] <= box2_pos[1] && box2_pos[1] <= box1_pos[9]) || (box1_pos[1] >= box2_pos[1] && box1_pos[1] <= box2_pos[9])){
 			find = 1;
-			printf("FIND1\n"));
+			printf("FIND1\n");
 		}
 	}
 	else if(box2_pos[0] <= box1_pos[0] && box1_pos[0] <= box2_pos[8]){
