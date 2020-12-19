@@ -245,7 +245,7 @@ short used_attribute(relations *relations, int index, int cont_elem){//Find if a
 	return find;
 }
 
-float * init_locations(box bbox, int im_dim[2]){
+double * init_locations(box bbox, int im_dim[2]){
 	float x1,y1,x2,y2, width, height;
 	int i;
 	
@@ -258,7 +258,7 @@ float * init_locations(box bbox, int im_dim[2]){
 	height = y2-y1;
 	
 	//box1_pos=[x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7,x8,y8];
-	float static box_pos [16];
+	double static box_pos [16];
 	
 	//printf("x1: %.2f, x2: %.2f, y1: %.2f, y2: %.2f, width: %.2f, height: %.2f", x1,x2,y1,y2,width,height);
 	
@@ -319,34 +319,127 @@ float * init_locations(box bbox, int im_dim[2]){
 	return box_pos;
 }
 
-void find_relations(relations *obt_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
-	int i,j;
+int fill_count(relations *list_relations, int cont_elem){
+	int count = 0;
+	int i;
+	for(i = 0 ; i < cont_elem; i++){
+		if(list_relations[i].ind_entrada != -1 && list_relations[i].ind_salida != -1) count++;
+	}
+	return count;
+}
+
+
+short intersection_box(double *box1_pos, double *box2_pos){
+	short find = 0;
 	
-	float *box1_pos, *box2_pos;
+	if(*(box1_pos+0) <= *(box2_pos + 0) && *(box2_pos +0) <= *(box1_pos +8)){
+		if((*(box1_pos + 1) <= *(box2_pos + 1) && *(box2_pos + 1) <= *(box1_pos + 9)) || (*(box1_pos + 1) >= *(box2_pos +1) && *(box1_pos + 1) <= *(box2_pos + 9))){
+			find = 1;
+		}
+	}
+	else if(*(box2_pos+0) <= *(box1_pos + 0) && *(box1_pos +0) <= *(box2_pos +8)){
+		if((*(box2_pos + 1) <= *(box1_pos + 1) && *(box1_pos + 1) <= *(box2_pos + 9)) || (*(box2_pos + 1) >= *(box1_pos +1) && *(box2_pos + 1) <= *(box1_pos + 9))){
+			find = 1;
+		}
+	return find;.
+}
+
+double box_min_distance(double *box1_pos, double *box2_pos){
+	double dist;
+	double aux == -1;
+	int i,j;
+	i=0;
+	while(i<16){
+		j=0;
+		while(j<16){
+			if(aux == -1){
+				dist = pow(*(box1_pos + i) - *(box2_pos + j),2) + pow(*(box1_pos +(i+1)) - *(box2_pos + (j+1)),2);
+				dist = sqrt(dist);
+				aux = dist;
+			}
+			else{
+				dist = pow(*(box1_pos + i) - *(box2_pos +j),2) + pow(*(box1_pos +(i+1)) - *(box2_pos + (j+1)),2);
+				dist = sqrt(dist);
+				if(dist < aux){
+					aux = dist;
+				}
+			}
+			j += 2;
+		}
+		i += 2;
+	}
+	
+	return aux;
+}
+
+void min_dist_array(box *possible_dist, bbox){
+	int i, max_ind;
+	max_ind = -1;
+	double max_dist;
+	for(i =0 ; i < 5; i++){
+		if(max_ind == -1){
+			max_ind = i;
+			max_dist = possible_dist[i].dist;
+		}
+		else if(possible_dist[i].dist > max_dist){
+			max_ind = i;
+			max_dist = possible_dist[i].dist;
+		}
+	}
+	if(bbox.dist < max_dist){
+		possible_dist[i] = bbox;
+	}
+}
+
+void find_relations(relations *obt_relations, relations *pos_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
+	int i;
+	double *box1_pos, *box2_pos;
+	int possible_inter[5];
+	box possible_dist[5];
+	int cont_inter = 0;
+	int cont_dist = 0;
 	
 	box1_pos = init_locations(bbox, im_dim);
 	
-	printf("Bbox element %d \n", bbox.ind_class);
-	for(i=0; i<16; i++){
-		printf("Pos: %d, value: %.2f  ", i, *(box1_pos + i) );
-	}
-	
-	printf("\n");
+	//printf("Bbox element %d \n", bbox.ind_class);
+	//for(i=0; i<16; i++){
+		//printf("Pos: %d, value: %.2f  ", i, *(box1_pos + i) );
+	//}
+	//printf("\n");
 	
 	
 	for(i=0;i<cont_elem;i++){
 		int ind = elem[i];
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
+			box2_pos = init_locations(dets[ind].bbox, im_dim);
 			if(!find){
-				box2_pos = init_locations(dets[ind].bbox, im_dim);
+				if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
+					possible_inter[cont_inter] = ind;
+					cont_inter++;
+				}
+				else{
+					if(cont_dist < 5){
+						dist = box_min_distance(box1_pos, box2_pos);
+						possible_dist[cont_dist] = dets[ind].bbox;
+						possible_dist[cont_dist].dist = dist;
+						cont_dist++;
+					}
+					else{
+						dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
+						min_dist_array(possible_dist, dets[ind].bbox);
+					}
+				}
+				
 				
 			}
-		}
+		}	
+
 	}
 	
 	
 }
+
 
 void init_relations(relations *relations, int cont_elem){
 	int i;
@@ -383,18 +476,21 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	}
 	
 	relations obt_relations[cont_elem];
+	relations pos_relations[cont_elem];
+	init_relations(pos_relations, cont_elem);
 	init_relations(obt_relations, cont_elem);
 
-    for(i = 0; i < num; ++i){
+    for(i = 0; i < cont_elem; ++i){
         char labelstr[4096] = {0};
 		char num_element[50];
 		sprintf(num_element, "%d", i);
+		ind = elem[i];
 
-        if(dets[i].bbox.ind_class >= 0){
+        if(dets[ind].bbox.ind_class >= 0){
             int width = im.h * .006;
-			strcat(labelstr, names[dets[i].bbox.ind_class]);
+			strcat(labelstr, names[dets[ind].bbox.ind_class]);
 			strcat(labelstr,num_element);
-			printf("%s %s: %.0f%%\n", names[dets[i].bbox.ind_class], num_element, dets[i].prob[dets[i].bbox.ind_class]*100);
+			printf("%s %s: %.0f%%\n", names[dets[ind].bbox.ind_class], num_element, dets[ind].prob[dets[ind].bbox.ind_class]*100);
 
             /*
                if(0){
@@ -404,7 +500,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
              */
 
             //printf("%d %s: %.0f%%\n", i, names[class], prob*100);
-            int offset = dets[i].bbox.ind_class*123457 % classes;
+            int offset = dets[ind].bbox.ind_class*123457 % classes;
             float red = get_color(2,offset,classes);
             float green = get_color(1,offset,classes);
             float blue = get_color(0,offset,classes);
@@ -415,9 +511,13 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             rgb[0] = red;
             rgb[1] = green;
             rgb[2] = blue;
-            box b = dets[i].bbox;
+            box b = dets[ind].bbox;
 			
-			find_relations(obt_relations, dets, b, im_dim, elem, cont_elem);
+			if(b.ind_class == 3){
+				find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
+			}
+			
+			
             
 			//printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
 
@@ -439,8 +539,8 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 draw_label(im, top + width, left, label, rgb);
                 free_image(label);
             }
-            if (dets[i].mask){
-                image mask = float_to_image(14, 14, 1, dets[i].mask);
+            if (dets[ind].mask){
+                image mask = float_to_image(14, 14, 1, dets[ind].mask);
                 image resized_mask = resize_image(mask, b.w*im.w, b.h*im.h);
                 image tmask = threshold_image(resized_mask, .5);
                 embed_image(tmask, im, left, top);

@@ -515,11 +515,11 @@ typedef struct {
 typedef struct{
     float x, y, w, h;
 	int ind_class, id_box;
+	double dist;
 } box;
 
 typedef struct {
 	int ind_entrada, ind_salida;
-	float dist;
 }relations;
 
 typedef struct detection{
