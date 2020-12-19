@@ -372,7 +372,7 @@ double box_min_distance(double *box1_pos, double *box2_pos){
 	return aux;
 }
 
-void min_dist_array(box *possible_dist, bbox){
+void min_dist_array(box *possible_dist, box bbox){
 	int i, max_ind;
 	max_ind = -1;
 	double max_dist;
