@@ -433,6 +433,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 					}
 					else{
 						dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
+						printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox,dist);
 						min_dist_array(possible_dist, dets[ind].bbox);
 					}
 				}
@@ -522,7 +523,6 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 			if(b.ind_class == 3){
 				find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
 			}
-			printf("Smash time 1!!!\n");
 			
             
 			//printf("%f %f %f %f %s\n", b.x, b.y, b.w, b.h, names[b.ind_class]);
@@ -540,14 +540,10 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             if(bot > im.h-1) bot = im.h-1;
 
             draw_box_width(im, left, top, right, bot, width, red, green, blue);
-			printf("Smash time 2!!!\n");
             if (alphabet) {
                 image label = get_label(alphabet, labelstr, (im.h*.03));
-				printf("Smash time 3!!!\n");
                 draw_label(im, top + width, left, label, rgb);
-				printf("Smash time 4!!!\n");
                 free_image(label);
-				printf("Smash time 5!!!\n");
             }
             if (dets[i].mask){
                 image mask = float_to_image(14, 14, 1, dets[i].mask);
