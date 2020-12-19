@@ -488,7 +488,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 
     for(i = 0; i < num; ++i){
         char labelstr[4096] = {0};
-		char num_element[50];
+		char num_element[100];
 		sprintf(num_element, "%d", i);
 
         if(dets[i].bbox.ind_class >= 0){
@@ -518,9 +518,9 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             rgb[2] = blue;
             box b = dets[i].bbox;
 			
-			if(b.ind_class == 3){
-				find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
-			}
+			//if(b.ind_class == 3){
+				//find_relations(obt_relations, pos_relations, dets, b, im_dim, elem, cont_elem);
+			//}
 			
 			
             
