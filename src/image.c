@@ -432,21 +432,17 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 						cont_dist++;
 					}
 					else{
-						printf("Smash time 2!!!\n");
 						dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
 						min_dist_array(possible_dist, dets[ind].bbox);
 					}
 				}
-				
-				
 			}
 		}	
-
 	}
 	
-	for(i=0; i< 5 ;i++){
-		printf("Bbox id: %d, Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
-	}
+	//for(i=0; i< 5 ;i++){
+		//printf("Bbox id: %d, Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
+	//}
 	
 	
 }
