@@ -433,7 +433,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 					}
 					else{
 						dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
-						printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox,dist);
+						printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox.dist);
 						min_dist_array(possible_dist, dets[ind].bbox);
 					}
 				}
