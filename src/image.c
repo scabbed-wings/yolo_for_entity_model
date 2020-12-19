@@ -401,7 +401,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	int cont_dist = 0;
 	double dist;
 	
-	box1_pos = init_locations(bbox, im_dim, box1_pos);
+	init_locations(bbox, im_dim, box1_pos);
 	
 	//printf("Bbox element %d \n", bbox.ind_class);
 	//for(i=0; i<16; i++){
@@ -414,7 +414,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		int ind = elem[i];
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
-			box2_pos = init_locations(dets[ind].bbox, im_dim, box2_pos);
+			init_locations(dets[ind].bbox, im_dim, box2_pos);
 			if(!find){
 				if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
 					possible_inter[cont_inter] = ind;
