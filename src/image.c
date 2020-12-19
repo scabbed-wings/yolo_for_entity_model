@@ -486,17 +486,16 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	init_relations(pos_relations, cont_elem);
 	init_relations(obt_relations, cont_elem);
 
-    for(i = 0; i < cont_elem; ++i){
+    for(i = 0; i < num; ++i){
         char labelstr[4096] = {0};
 		char num_element[50];
 		sprintf(num_element, "%d", i);
-		int ind = elem[i];
 
-        if(dets[ind].bbox.ind_class >= 0){
+        if(dets[i].bbox.ind_class >= 0){
             int width = im.h * .006;
-			strcat(labelstr, names[dets[ind].bbox.ind_class]);
+			strcat(labelstr, names[dets[i].bbox.ind_class]);
 			strcat(labelstr,num_element);
-			printf("%s %s: %.0f%%\n", names[dets[ind].bbox.ind_class], num_element, dets[ind].prob[dets[ind].bbox.ind_class]*100);
+			printf("%s %s: %.0f%%\n", names[dets[i].bbox.ind_class], num_element, dets[i].prob[dets[i].bbox.ind_class]*100);
 
             /*
                if(0){
@@ -506,7 +505,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
              */
 
             //printf("%d %s: %.0f%%\n", i, names[class], prob*100);
-            int offset = dets[ind].bbox.ind_class*123457 % classes;
+            int offset = dets[i].bbox.ind_class*123457 % classes;
             float red = get_color(2,offset,classes);
             float green = get_color(1,offset,classes);
             float blue = get_color(0,offset,classes);
@@ -545,8 +544,8 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 draw_label(im, top + width, left, label, rgb);
                 free_image(label);
             }
-            if (dets[ind].mask){
-                image mask = float_to_image(14, 14, 1, dets[ind].mask);
+            if (dets[i].mask){
+                image mask = float_to_image(14, 14, 1, dets[i].mask);
                 image resized_mask = resize_image(mask, b.w*im.w, b.h*im.h);
                 image tmask = threshold_image(resized_mask, .5);
                 embed_image(tmask, im, left, top);
