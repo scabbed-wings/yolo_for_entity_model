@@ -452,7 +452,6 @@ void init_relations(relations *relations, int cont_elem){
 	for(i=0; i<cont_elem ; i++){
 		relations[i].ind_entrada = -1;
 		relations[i].ind_salida = -1;
-		relations[i].dist =-1.0;
 	}
 }
 
