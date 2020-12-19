@@ -331,13 +331,13 @@ short intersection_box(double box1_pos[], double box2_pos[]){
 	if(box1_pos[0] <= box2_pos[0] && box2_pos[0] <= box1_pos[8]){
 		if((box1_pos[1] <= box2_pos[1] && box2_pos[1] <= box1_pos[9]) || (box1_pos[1] >= box2_pos[1] && box1_pos[1] <= box2_pos[9])){
 			find = 1;
-			printf(" FIND1: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n", *(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9));
+			printf("FIND1\n"));
 		}
 	}
 	else if(box2_pos[0] <= box1_pos[0] && box1_pos[0] <= box2_pos[8]){
 		if((box2_pos[1] <= box1_pos[1] && box1_pos[1] <= box2_pos[9]) || (box2_pos[1] >= box1_pos[1] && box2_pos[1] <= box1_pos[9])){
 			find = 1;
-			printf("FIND2: Box1_Pos X1: %lf Box1_Pos Y1: %lf Box2_Pos X1: %lf Box2_Pos Y1: %lf Box1_Pos X2: %lf Box1_Pos Y2: %lf Box2_Pos X2: %lf Box2_Pos Y2: %lf \n",*(box1_pos+0),*(box1_pos + 1),*(box2_pos + 0),*(box2_pos + 1), *(box1_pos + 8), *(box1_pos + 9), *(box2_pos + 8), *(box2_pos + 9) );
+			printf("FIND2\n")
 		}
 	}
 	
@@ -395,7 +395,7 @@ void min_dist_array(box *possible_dist, box bbox){
 void find_relations(relations *obt_relations, relations *pos_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
 	int i;
 	double box1_pos[16], box2_pos[16];
-	int possible_inter[5];
+	int possible_inter[5]={-1};
 	box possible_dist[5];
 	int cont_inter = 0;
 	int cont_dist = 0;
