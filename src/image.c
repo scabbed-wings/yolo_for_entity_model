@@ -489,7 +489,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
         char labelstr[4096] = {0};
 		char num_element[50];
 		sprintf(num_element, "%d", i);
-		ind = elem[i];
+		int ind = elem[i];
 
         if(dets[ind].bbox.ind_class >= 0){
             int width = im.h * .006;
