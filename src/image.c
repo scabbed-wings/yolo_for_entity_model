@@ -398,6 +398,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	box possible_dist[5];
 	int cont_inter = 0;
 	int cont_dist = 0;
+	double dist;
 	
 	box1_pos = init_locations(bbox, im_dim);
 	
