@@ -447,7 +447,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	double dist;
 	//int pos_relations_dim = cont_elem + cont_elem;
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
-	int pos_relations_len = relation_filled(pos_relations, cont_elem);
+	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
 	
 	
 	printf("obt_relations_len: %d , pos_relations_len: %d \n", obt_relations_len, pos_relations_len);
@@ -515,7 +515,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	}
 	
 	sort_dist_array(possible_dist);
-	printf("\nPossible_dist %d\n", bbox.id_box);
+	printf("Possible_dist %d\n", bbox.id_box);
 	for(i=0; i< 5 ; i++){
 		printf("Box_id: %d Dist: %lf ", possible_dist[i].id_box, possible_dist[i].dist);
 	}
@@ -524,9 +524,9 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 }
 
 
-void init_relations(relations *relations, int cont_elem){
+void init_relations(relations *relations, int num){
 	int i;
-	for(i=0; i<cont_elem ; i++){
+	for(i=0; i< num ; i++){
 		relations[i].ind_entrada = -1;
 		relations[i].ind_salida = -1;
 		relations[i].id_box = -1;
@@ -559,14 +559,14 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 		}
 	}
 	
-	//int pos_relations_dim = cont_elem + cont_elem ;
+	int pos_relations_dim = cont_elem*2 ;
 	
-	//printf("Cont_element: %d Pos_relations_dim: %d \n",cont_elem, pos_relations_dim);
+	printf("Cont_element: %d Pos_relations_dim: %d \n",cont_elem, pos_relations_dim);
 	
 	relations obt_relations[cont_elem];
-	relations pos_relations[cont_elem];
-	init_relations(pos_relations, cont_elem);
+	relations pos_relations[pos_relations_dim];
 	init_relations(obt_relations, cont_elem);
+	init_relations(pos_relations, pos_relations_dim);
 
     for(i = 0; i < num; ++i){
 		char labelstr[4096] = {0};
