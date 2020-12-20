@@ -710,12 +710,12 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
 	printf("----------Relaciones obtenidas para solución----------\n");
 	for(i=0;i<obt_relations_len;i ++){
-		printf("Relation &d: Box %d y Box %d  Dist = %lf \n", obt_relations[i].id_box,  obt_relations[i].ind_entrada, obt_relations[i].ind_salida, obt_relations[i].dist);
+		printf("Relation %d: Box %d y Box %d  Dist = %lf \n", obt_relations[i].id_box,  obt_relations[i].ind_entrada, obt_relations[i].ind_salida, obt_relations[i].dist);
 	}
 	
 	printf("----------Relaciones obtenidas para rellenar----------\n");
 	for(i=0;i<pos_relations_len;i ++){
-		printf("Relation &d: Box %d y Box %d  Dist = %lf \n", pos_relations[i].id_box,  pos_relations[i].ind_entrada, pos_relations[i].ind_salida, pos_relations[i].dist);
+		printf("Relation %d: Box %d y Box %d  Dist = %lf \n", pos_relations[i].id_box,  pos_relations[i].ind_entrada, pos_relations[i].ind_salida, pos_relations[i].dist);
 	}
 }
 
