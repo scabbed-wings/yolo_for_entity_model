@@ -390,12 +390,13 @@ void min_dist_array(box possible_dist[], box bbox){
 	}
 }
 
-void sort_dist_array(box box_array[]){
+void sort_dist_array(box *box_array){
 	int i, j;
-	for(i = 0; i< 5 ; i++){
-		for(j=i+1; j < 5; j++){
+	box aux;
+	for(i = 0; i < 5 ; i++){
+		for(j = i+1; j < 5; j++){
 			if(box_array[i].dist > box_array[j].dist){
-				box aux = box_array[j];
+				aux = box_array[j];
 				box_array[j] = box_array[i];
 				box_array[i] = aux;
 			}
@@ -445,7 +446,10 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	short intr_sol = 0;
 	double dist;
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
-	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
+	int pos_relations_len = relation_filled(pos_relations, cont_elem * 2);
+	
+	
+	printf("obt_relations_len: %d , pos_relations_len: %d \n", obt_relations_len, pos_relations_len);
 	
 	
 	init_locations(bbox, im_dim, box1_pos);
@@ -555,9 +559,9 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	}
 	
 	relations obt_relations[cont_elem];
-	relations pos_relations[cont_elem*2];
+	relations pos_relations[cont_elem * 2];
 	init_relations(pos_relations, cont_elem);
-	init_relations(obt_relations, cont_elem*2);
+	init_relations(obt_relations, cont_elem * 2);
 
     for(i = 0; i < num; ++i){
 		char labelstr[4096] = {0};
