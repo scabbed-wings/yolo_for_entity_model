@@ -406,7 +406,7 @@ void sort_dist_array(box box_array[]){
 short relation_exists(relations *relations, box box1, box box2, int len){
 	short find = 0;
 	int i;
-	for(int i = 0; i < len ; i++){
+	for(i = 0; i < len ; i++){
 		if((relations[i].ind_entrada == box1.id_box && relations[i].ind_salida == box2.id_box) || (relations[i].ind_entrada == box2.id_box && relations[i].ind_salida == box1.id_box)){
 			find = 1;
 		}
@@ -417,8 +417,8 @@ short relation_exists(relations *relations, box box1, box box2, int len){
 int relation_filled(relations *relation, int len){
 	int i;
 	int counter =0;
-	for(int i=0; i<len; i++){
-		if(relation[i].ind_entrada != -1 && relation[i].ind_salida != -1) counter++;
+	for(i=0; i<len; i++){
+		if(relation[i].ind_entrada != -1 && relation[i].ind_salida != -1) counter+=1;
 	}
 	return counter;
 }
