@@ -390,14 +390,62 @@ void min_dist_array(box possible_dist[], box bbox){
 	}
 }
 
-void find_relations(relations *obt_relations, relations *pos_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
+void sort_dist_array(box box_array[]){
+	int i, j;
+	for(i = 0; i< 5 ; i++){
+		for(j=i+1; j < 5; j++){
+			if(box_array[i] > box_array[j]){
+				box aux = box_array[j];
+				box_array[j] = box_array[i];
+				box_array[i] = aux;
+			}
+		}
+	}
+}
+
+short relation_exists(relations *relations, box box1, box box2, int len){
+	short find = 0;
 	int i;
+	for(int i = 0; i < len ; i++){
+		if((relations[i].ind_entrada == box1.id_box && relations[i].ind_salida == box2.id_box) || (relations[i].ind_entrada == box2.id_box && relations[i].ind_salida == box1.id_box)){
+			find = 1;
+		}
+	}
+	return find;
+}
+
+int relation_filled(relations *relation, int len){
+	int i;
+	int counter =0;
+	for(int i=0; i<len; i++){
+		if(relation[i].ind_entrada != -1 && relation[i].ind_salida != -1) counter++;
+	}
+	return counter;
+}
+
+short there_is_distint(int id_class, box boxes[]){
+	int i;
+	short find =0 ;
+	for(i = 0 ; i< 5; i++){
+		if(boxes[i].ind_class == id_class){
+			find = 1;
+		}
+	}
+	
+	return find;
+}
+
+void find_relations(relations *obt_relations, relations *pos_relations, detection *dets, box bbox, int im_dim[2], int elem[], int cont_elem){
+	int i,j;
 	double box1_pos[16];
 	int possible_inter[5]={-1};
 	box possible_dist[5];
 	int cont_inter = 0;
 	int cont_dist = 0;
+	short intr_sol = 0;
 	double dist;
+	int obt_relations_len = relation_filled(obt_relations, cont_elem);
+	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
 	
 	
 	init_locations(bbox, im_dim, box1_pos);
@@ -420,7 +468,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 				if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
 					possible_inter[cont_inter] = ind;
 					cont_inter++;
-					printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
+					//printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
 				}
 				else{
 					if(cont_dist < 5){
@@ -443,7 +491,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 			if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
 					possible_inter[cont_inter] = ind;
 					cont_inter++;
-					printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
+					//printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
 				}
 			else{
 				if(cont_dist < 5){
@@ -461,12 +509,91 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		}
 	}
 	
-	for(i=0; i< cont_dist; i++){
-		printf("BBox id: %d BBox Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
+	sort_dist_array(possible_dist);
+	
+	if(cont_inter >=2){
+		for(i=0; i<cont_inter; i++){
+			int inter_ind1 = possible_inter[i];
+			for(j = i+1; j<cont_inter; j++){
+				int inter_ind2 = possible_inter[j];
+				if(dets[inter_ind1].bbox.ind_class != dets[inter_ind2].bbox.ind_class && !intr_sol && obt_relations_len < cont_elem){
+					obt_relations[obt_relations_len].ind_entrada = dets[inter_ind1].bbox.id_box;
+					obt_relations[obt_relations_len].ind_salida = dets[inter_ind2].bbox.id_box;
+					obt_relations[obt_relations_len].id_box = bbox.id_box;
+					intr_sol = 1;
+				}
+				else if(dets[inter_ind1].bbox.ind_class != dets[inter_ind2].bbox.ind_class && pos_relations_len < cont_elem * 2){
+					pos_relations[pos_relations_len].ind_entrada = dets[inter_ind1].bbox.id_box;
+					pos_relations[pos_relations_len].ind_salida = dets[inter_ind2].bbox.id_box;
+					pos_relations[pos_relations_len].id_box = bbox.id_box;
+					pos_relations_len++;
+				}
+			}
+		}
 	}
-	
-	
-	
+	else if(cont_inter ==1){
+		int inter_ind = possible_inter[0];
+		short distinct  = there_is_distint(dets[inter_ind].bbox.ind_class, possible_dist);
+		if(distinct){
+			for(i =0; i < cont_dist ; i++){
+				if(dets[inter_ind].bbox.ind_class != possible_dist[i].ind_class && !intr_sol && obt_relations_len < cont_elem){
+					obt_relations[obt_relations_len].ind_entrada = dets[inter_ind].bbox.id_box;
+					obt_relations[obt_relations_len].ind_salida = possible_dist[i].id_box;
+					obt_relations[obt_relations_len].id_box = bbox.id_box;
+					obt_relations[obt_relations_len].dist = possible_dist[i].dist;
+					intr_sol = 1;
+				}
+				else if(dets[inter_ind].bbox.ind_class != possible_dist[i].ind_class && pos_relations_len < cont_elem * 2){
+					pos_relations[pos_relations_len].ind_entrada = dets[inter_ind].bbox.id_box;
+					pos_relations[pos_relations_len].ind_salida = possible_dist[i].id_box;
+					pos_relations[pos_relations_len].id_box = bbox.id_box;
+					pos_relations[pos_relations_len].dist = possible_dist[i].dist;
+					pos_relations_len++;
+				}
+			
+			}	
+		}
+		else{
+			for(i = 0; i < cont_dist; i++){
+				for(j =i+1; j<cont_dist; j++){
+					if(possible_dist[i].ind_class != possible_dist[j].ind_class && !intr_sol && obt_relations_len < cont_elem){
+						obt_relations[obt_relations_len].ind_entrada = possible_dist[i].id_box;
+						obt_relations[obt_relations_len].ind_salida = possible_dist[j].id_box;
+						obt_relations[obt_relations_len].id_box = bbox.id_box;
+						obt_relations[obt_relations_len].dist = possible_dist[i].dist;
+						intr_sol = 1;
+					}
+					else if(possible_dist[i].ind_class != possible_dist[j].ind_class && pos_relations_len < cont_elem*2){
+						pos_relations[pos_relations_len].ind_entrada = possible_dist[i].id_box;
+						pos_relations[pos_relations_len].ind_salida = possible_dist[j].id_box;
+						pos_relations[pos_relations_len].id_box = bbox.id_box;
+						pos_relations[pos_relations_len].dist = possible_dist[i].dist;
+						pos_relations_len++;
+					}
+				}
+			}
+		}
+	}
+	else {
+		for(i = 0; i < cont_dist; i++){
+			for(j =i+1; j<cont_dist; j++){
+				if(possible_dist[i].ind_class != possible_dist[j].ind_class && !intr_sol && obt_relations_len < cont_elem){
+					obt_relations[obt_relations_len].ind_entrada = possible_dist[i].id_box;
+					obt_relations[obt_relations_len].ind_salida = possible_dist[j].id_box;
+					obt_relations[obt_relations_len].id_box = bbox.id_box;
+					obt_relations[obt_relations_len].dist = possible_dist[i].dist;
+					intr_sol = 1;
+				}
+				else if(possible_dist[i].ind_class != possible_dist[j].ind_class && pos_relations_len < cont_elem*2){
+					pos_relations[pos_relations_len].ind_entrada = possible_dist[i].id_box;
+					pos_relations[pos_relations_len].ind_salida = possible_dist[j].id_box;
+					pos_relations[pos_relations_len].id_box = bbox.id_box;
+					pos_relations[pos_relations_len].dist = possible_dist[i].dist;
+					pos_relations_len++;
+				}
+			}
+		}
+	}
 }
 
 
@@ -475,6 +602,8 @@ void init_relations(relations *relations, int cont_elem){
 	for(i=0; i<cont_elem ; i++){
 		relations[i].ind_entrada = -1;
 		relations[i].ind_salida = -1;
+		relations[i].id_box = -1;
+		relations[i].dist = -1;
 	}
 }
 
@@ -504,9 +633,9 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	}
 	
 	relations obt_relations[cont_elem];
-	relations pos_relations[cont_elem];
+	relations pos_relations[cont_elem*2];
 	init_relations(pos_relations, cont_elem);
-	init_relations(obt_relations, cont_elem);
+	init_relations(obt_relations, cont_elem*2);
 
     for(i = 0; i < num; ++i){
 		char labelstr[4096] = {0};
@@ -577,6 +706,17 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             }
         }
     }
+	int obt_relations_len = relation_filled(obt_relations, cont_elem);
+	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
+	printf("----------Relaciones obtenidas para solución----------\n")
+	for(i=0;i<obt_relations_len;i ++){
+		printf("Relation &d: Box %d y Box %d  Dist = %lf \n", obt_relations[i].id_box,  obt_relations[i].ind_entrada, obt_relations[i].ind_salida, obt_relations[i].dist);
+	}
+	
+	printf("----------Relaciones obtenidas para rellenar----------\n")
+	for(i=0;i<pos_relations_len;i ++){
+		printf("Relation &d: Box %d y Box %d  Dist = %lf \n", pos_relations[i].id_box,  pos_relations[i].ind_entrada, pos_relations[i].ind_salida, pos_relations[i].dist);
+	}
 }
 
 void transpose_image(image im)

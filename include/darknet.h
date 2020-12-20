@@ -519,7 +519,8 @@ typedef struct{
 } box;
 
 typedef struct {
-	int ind_entrada, ind_salida;
+	int ind_entrada, ind_salida, id_box;
+	double dist;
 }relations;
 
 typedef struct detection{
