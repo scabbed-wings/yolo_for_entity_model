@@ -445,7 +445,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	int cont_dist = 0;
 	short intr_sol = 0;
 	double dist;
-	int pos_relations_dim = cont_elem * 2;
+	int pos_relations_dim = cont_elem + cont_elem;
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
 	int pos_relations_len = relation_filled(pos_relations, pos_relations_dim);
 	
@@ -559,7 +559,9 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 		}
 	}
 	
-	int pos_relations_dim = cont_elem * 2;
+	int pos_relations_dim = cont_elem + cont_elem ;
+	
+	printf("Cont_element: %d Pos_relations_dim: %d \n",cont_elem, pos_relations_dim);
 	
 	relations obt_relations[cont_elem];
 	relations pos_relations[pos_relations_dim];
