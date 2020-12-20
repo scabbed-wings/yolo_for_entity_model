@@ -331,13 +331,11 @@ short intersection_box(double box1_pos[], double box2_pos[]){
 	if(box1_pos[0] <= box2_pos[0] && box2_pos[0] <= box1_pos[8]){
 		if((box1_pos[1] <= box2_pos[1] && box2_pos[1] <= box1_pos[9]) || (box1_pos[1] >= box2_pos[1] && box1_pos[1] <= box2_pos[9])){
 			find = 1;
-			printf("FIND1\n");
 		}
 	}
 	else if(box2_pos[0] <= box1_pos[0] && box1_pos[0] <= box2_pos[8]){
 		if((box2_pos[1] <= box1_pos[1] && box1_pos[1] <= box2_pos[9]) || (box2_pos[1] >= box1_pos[1] && box2_pos[1] <= box1_pos[9])){
 			find = 1;
-			printf("FIND2\n");
 		}
 	}
 	
@@ -461,6 +459,10 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 				}
 			}
 		}
+	}
+	
+	for(i=0; i< cont_dist; i++){
+		printf("BBox id: %d BBox Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
 	}
 	
 	
