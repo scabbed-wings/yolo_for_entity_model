@@ -394,7 +394,7 @@ void sort_dist_array(box box_array[]){
 	int i, j;
 	for(i = 0; i< 5 ; i++){
 		for(j=i+1; j < 5; j++){
-			if(box_array[i] > box_array[j]){
+			if(box_array[i].dist > box_array[j].dist){
 				box aux = box_array[j];
 				box_array[j] = box_array[i];
 				box_array[i] = aux;
