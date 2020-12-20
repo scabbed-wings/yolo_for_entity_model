@@ -427,7 +427,7 @@ short there_is_distint(int id_class, box boxes[]){
 	int i;
 	short find =0 ;
 	for(i = 0 ; i< 5; i++){
-		if(boxes[i].ind_class == id_class){
+		if(boxes[i].ind_class != id_class){
 			find = 1;
 		}
 	}
