@@ -445,8 +445,9 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	int cont_dist = 0;
 	short intr_sol = 0;
 	double dist;
+	int pos_relations_dim = cont_elem * 2;
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
-	int pos_relations_len = relation_filled(pos_relations, cont_elem * 2);
+	int pos_relations_len = relation_filled(pos_relations, pos_relations_dim);
 	
 	
 	printf("obt_relations_len: %d , pos_relations_len: %d \n", obt_relations_len, pos_relations_len);
@@ -558,10 +559,12 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 		}
 	}
 	
+	int pos_relations_dim = cont_elem * 2;
+	
 	relations obt_relations[cont_elem];
-	relations pos_relations[cont_elem * 2];
+	relations pos_relations[pos_relations_dim];
 	init_relations(pos_relations, cont_elem);
-	init_relations(obt_relations, cont_elem * 2);
+	init_relations(obt_relations, pos_relations_dim);
 
     for(i = 0; i < num; ++i){
 		char labelstr[4096] = {0};
