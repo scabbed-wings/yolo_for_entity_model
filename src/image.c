@@ -416,9 +416,9 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		int ind = elem[i];
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
-			double box2_pos[16];
-			init_locations(dets[ind].bbox, im_dim, box2_pos);
 			if(!find){
+				double box2_pos[16];
+				init_locations(dets[ind].bbox, im_dim, box2_pos);
 				if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
 					possible_inter[cont_inter] = ind;
 					cont_inter++;
@@ -438,12 +438,31 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 					}
 				}
 			}
-		}	
+		}
+		else{
+			double box2_pos[16];
+			init_locations(dets[ind].bbox, im_dim, box2_pos);
+			if(intersection_box(box1_pos, box2_pos) && cont_inter < 5){
+					possible_inter[cont_inter] = ind;
+					cont_inter++;
+					printf("Detection box %d collides with Detection box %d \n", bbox.id_box, dets[ind].bbox.id_box);
+				}
+			else{
+				if(cont_dist < 5){
+					dist = box_min_distance(box1_pos, box2_pos);
+					possible_dist[cont_dist] = dets[ind].bbox;
+					possible_dist[cont_dist].dist = dist;
+					cont_dist++;
+				}
+				else{
+					dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
+					//printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox.dist);
+					min_dist_array(possible_dist, dets[ind].bbox);
+				}
+			}
+		}
 	}
 	
-	for(i=0; i< 5 ;i++){
-		printf("Bbox id: %d, Distance: %lf \n", possible_dist[i].id_box, possible_dist[i].dist);
-	}
 	
 	
 }
