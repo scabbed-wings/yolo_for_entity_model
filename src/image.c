@@ -390,11 +390,11 @@ void min_dist_array(box possible_dist[], box bbox){
 	}
 }
 
-void sort_dist_array(box *box_array){
+void sort_dist_array(box *box_array, int len){
 	int i, j;
 	box aux;
-	for(i = 0; i < 5 ; i++){
-		for(j = i+1; j < 5; j++){
+	for(i = 0; i < len ; i++){
+		for(j = i+1; j < len; j++){
 			if(box_array[i].dist > box_array[j].dist){
 				aux = box_array[j];
 				box_array[j] = box_array[i];
@@ -465,7 +465,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	
 	for(i=0;i<cont_elem;i++){
 		int ind = elem[i];
-		printf("Ind_object: %d ", ind);
+		//printf("Ind_object: %d ", ind);
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
 			if(!find){
@@ -515,7 +515,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		}
 	}
 	
-	sort_dist_array(possible_dist);
+	sort_dist_array(possible_dist, cont_dist);
 	//printf("Possible_dist %d\n", bbox.id_box);
 	//for(i=0; i< 5 ; i++){
 		//printf("Box_id: %d Dist: %lf ", possible_dist[i].id_box, possible_dist[i].dist);
