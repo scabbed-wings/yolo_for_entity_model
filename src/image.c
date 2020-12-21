@@ -450,7 +450,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
 	
 	
-	printf("obt_relations_len: %d , pos_relations_len: %d \n", obt_relations_len, pos_relations_len);
+	//printf("obt_relations_len: %d , pos_relations_len: %d \n", obt_relations_len, pos_relations_len);
 	
 	
 	init_locations(bbox, im_dim, box1_pos);
@@ -465,6 +465,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	
 	for(i=0;i<cont_elem;i++){
 		int ind = elem[i];
+		printf("Ind_object: %d ", ind);
 		if(dets[ind].bbox.ind_class == 0){ //Check if the element is an attribute
 			short find = used_attribute(obt_relations, ind, cont_elem);
 			if(!find){
@@ -645,7 +646,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	
 	//int pos_relations_dim = cont_elem*2 ;
 	
-	//printf("Cont_element: %d Pos_relations_dim: %d \n",cont_elem, pos_relations_dim);
+	printf("Cont_element: %d \n",cont_elem);
 	
 	relations obt_relations[cont_elem];
 	relations pos_relations[cont_elem*2];
