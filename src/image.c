@@ -632,7 +632,7 @@ short condition_satisfied(relations *obt_relations, int id_box, int ind_class, i
 	return find;
 }
 
-int delete_relation(relations *obt_relations, int position, obt_relations_len){
+int delete_relation(relations *obt_relations, int position, int obt_relations_len){
 	int i;
 	for(i = position; i < obt_relations_len; i++){
 		obt_relations[i] = obt_relations[i+1];
