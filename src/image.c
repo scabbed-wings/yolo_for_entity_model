@@ -638,7 +638,7 @@ int delete_relation(relations *obt_relations, int position, int obt_relations_le
 		obt_relations[i] = obt_relations[i+1];
 	}
 	obt_relations_len--;
-	return obt_relations;
+	return obt_relations_len;
 }
 
 int add_solution(relations *obt_relations, int obt_relations_len, relations new_relation, int cont_elem){
@@ -648,7 +648,7 @@ int add_solution(relations *obt_relations, int obt_relations_len, relations new_
 		for(j = 0; j< obt_relations_len; j++){
 			if(obt_relations[i].id_box != obt_relations[j].id_box && ((obt_relations[i].ind_entrada == obt_relations[j].ind_entrada && obt_relations[i].ind_salida == obt_relations[j].ind_salida) || (obt_relations[i].ind_entrada == obt_relations[j].ind_salida && obt_relations[i].ind_salida == obt_relations[j].ind_entrada))){
 				if(new_relation.dist < obt_relations[j].dist && !change_sol){
-					obt_relations_len = eliminate_relation(obt_relations, j, obt_relations_len);
+					obt_relations_len = delete_relation(obt_relations, j, obt_relations_len);
 					obt_relations[obt_relations_len] = new_relation;
 					change_sol++;
 				}
@@ -675,7 +675,7 @@ int delete_max_relation(relations *obt_relations, int obt_relations_len, int id_
 				dist = obt_relations[i].dist;
 			}
 			else if(obt_relations[i].dist > dist){
-				dist = obt_relations[i].dist
+				dist = obt_relations[i].dist;
 				ind = i;
 			}
 		}
