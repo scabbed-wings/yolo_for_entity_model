@@ -740,7 +740,7 @@ void search_missing(relations *obt_relations, relations * pos_relations, detecti
 					}
 					
 					sort_dist_array(possible_dist, cont_dist);
-					relation new_relation;
+					relations new_relation;
 					new_relation.ind_entrada = ind1;
 					new_relation.ind_salida = possible_dist[0].id_box;
 					new_relation.dist = possible_dist[0].dist;
@@ -780,7 +780,7 @@ void search_missing(relations *obt_relations, relations * pos_relations, detecti
 				}
 				
 				sort_dist_array(possible_dist, cont_dist);
-				relation new_relation;
+				relations new_relation;
 				new_relation.ind_salida = possible_dist[0].id_box;
 				new_relation.dist = possible_dist[0].dist;
 				add_solution(obt_relations, obt_relations_len, new_relation, cont_elem);
