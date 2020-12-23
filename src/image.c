@@ -695,7 +695,7 @@ void search_missing(relations *obt_relations, relations * pos_relations, detecti
 	short find;
 	for(i = 0; i < cont_elem ; i++){
 		int ind1 = elem[i];
-		if(dets[ind1].bbox.ind_class == 1 && dets[ind].bbox.ind_class == 2){
+		if(dets[ind1].bbox.ind_class == 1 || dets[ind].bbox.ind_class == 2){
 			find = condition_satisfied(obt_relations, ind1, dets[ind1].bbox.ind_class, obt_relations_len, dets);
 			
 			while(!find){
@@ -755,7 +755,7 @@ void search_missing(relations *obt_relations, relations * pos_relations, detecti
 			}
 
 		}
-		else if(dets[ind].bbox.ind_class == 0){
+		else if(dets[ind1].bbox.ind_class == 0){
 			find = used_attribute(obt_relations, ind1, obt_relations_len);
 			while(!find){
 				box possible_dist[5]:
@@ -906,7 +906,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
         }
     }
 	
-	
+	search_missing(obt_relations, pos_relations, dets, elem[], cont_elem, obt_relations_len, pos_relations_len, im_dim);
 	
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
 	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
