@@ -758,7 +758,7 @@ void search_missing(relations *obt_relations, relations * pos_relations, detecti
 		else if(dets[ind1].bbox.ind_class == 0){
 			find = used_attribute(obt_relations, ind1, obt_relations_len);
 			while(!find){
-				box possible_dist[5]:
+				box possible_dist[5];
 				double box1_pos[16], box2_pos[16];
 				init_locations(dets[ind1].bbox, im_dim, box1_pos);
 				int cont_dist = 0;
