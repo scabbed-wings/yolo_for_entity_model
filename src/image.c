@@ -695,7 +695,7 @@ void search_missing(relations *obt_relations, relations * pos_relations, detecti
 	short find;
 	for(i = 0; i < cont_elem ; i++){
 		int ind1 = elem[i];
-		if(dets[ind1].bbox.ind_class == 1 || dets[ind].bbox.ind_class == 2){
+		if(dets[ind1].bbox.ind_class == 1 || dets[ind1].bbox.ind_class == 2){
 			find = condition_satisfied(obt_relations, ind1, dets[ind1].bbox.ind_class, obt_relations_len, dets);
 			
 			while(!find){
