@@ -607,7 +607,7 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	
 }
 
-short condition_satisfied(relation *obt_relations, int id_box, int ind_class, int obt_relations_len, detection *dets){
+short condition_satisfied(relations *obt_relations, int id_box, int ind_class, int obt_relations_len, detection *dets){
 	int i;
 	short find = 0;
 	short counter = 0;
