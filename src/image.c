@@ -501,9 +501,8 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 				}
 			else{
 				if(cont_dist < 5){
-					dist = box_min_distance(box1_pos, box2_pos);
+					dets[ind].bbox.dist = box_min_distance(box1_pos, box2_pos);
 					possible_dist[cont_dist] = dets[ind].bbox;
-					possible_dist[cont_dist].dist = dist;
 					cont_dist++;
 				}
 				else{
@@ -605,6 +604,190 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 		}
 	}
 	
+	
+}
+
+short condition_satisfied(relation *obt_relations, int id_box, int ind_class, int obt_relations_len, detection *dets){
+	int i;
+	short find = 0;
+	short counter = 0;
+	
+	for(i = 0; i < obt_relations_len; i++ ){
+		if(ind_class == 1){
+			if((obt_relations[i].ind_entrada == id_box || obt_relations[i].ind_salida == id_box) && (dets[obt_relations[i].ind_entrada].bbox.ind_class == 2 || dets[obt_relations[i].ind_salida].bbox.ind_class == 2)) find = 1;
+		}
+		else{
+			if((obt_relations[i].ind_entrada == id_box || obt_relations[i].ind_salida == id_box) && (dets[obt_relations[i].ind_entrada].bbox.ind_class == 1 || dets[obt_relations[i].ind_salida].bbox.ind_class == 1)){
+				counter++;
+			}
+			
+		}
+	}
+	
+	if(counter >=2 && counter <=3){
+		find = 1;
+	}
+	else if(counter > 3) find = -1;
+	
+	return find;
+}
+
+int delete_relation(relations *obt_relations, int position, obt_relations_len){
+	int i;
+	for(i = position; i < obt_relations_len; i++){
+		obt_relations[i] = obt_relations[i+1];
+	}
+	obt_relations_len--;
+	return obt_relations;
+}
+
+int add_solution(relations *obt_relations, int obt_relations_len, relations new_relation, int cont_elem){
+	int i,j;
+	short change_sol = 0;
+	for(i = 0; i < obt_relations_len; i++){
+		for(j = 0; j< obt_relations_len; j++){
+			if(obt_relations[i].id_box != obt_relations[j].id_box && ((obt_relations[i].ind_entrada == obt_relations[j].ind_entrada && obt_relations[i].ind_salida == obt_relations[j].ind_salida) || (obt_relations[i].ind_entrada == obt_relations[j].ind_salida && obt_relations[i].ind_salida == obt_relations[j].ind_entrada))){
+				if(new_relation.dist < obt_relations[j].dist && !change_sol){
+					obt_relations_len = eliminate_relation(obt_relations, j, obt_relations_len);
+					obt_relations[obt_relations_len] = new_relation;
+					change_sol++;
+				}
+			}
+		}
+	}
+	
+	if(!change_sol && obt_relations_len < cont_elem){
+		obt_relations[obt_relations_len] = new_relation;
+		obt_relations_len++;
+	}
+	return obt_relations_len;
+}
+
+int delete_max_relation(relations *obt_relations, int obt_relations_len, int id_relation){
+	int i;
+	int ind = -1;
+	double dist;
+	
+	for(i = 0; i< obt_relations_len; i++){
+		if(obt_relations[i].ind_salida == id_relation || obt_relations[i].ind_entrada == id_relation){
+			if(ind == -1){
+				ind = i;
+				dist = obt_relations[i].dist;
+			}
+			else if(obt_relations[i].dist > dist){
+				dist = obt_relations[i].dist
+				ind = i;
+			}
+		}
+	}
+	
+	for(i = ind; i < obt_relations_len ; i++){
+		obt_relations[i] = obt_relations[i+1];
+	}
+	
+	obt_relations_len--;
+	
+	return obt_relations_len;
+}
+
+void search_missing(relations *obt_relations, relations * pos_relations, detection *dets, int elem[],int cont_elem, int obt_relations_len, int pos_relations_len, int im_dim[]){
+	int i,j;
+	short find;
+	for(i = 0; i < cont_elem ; i++){
+		int ind1 = elem[i];
+		if(dets[ind1].bbox.ind_class == 1 && dets[ind].bbox.ind_class == 2){
+			find = condition_satisfied(obt_relations, ind1, dets[ind1].bbox.ind_class, obt_relations_len, dets);
+			
+			while(!find){
+
+				if(find == 0){
+					box possible_dist[5];
+					double box1_pos[16], box2_pos[16];
+					init_locations(dets[ind1].bbox, im_dim, box1_pos);
+					int cont_dist = 0;
+					for(j = 0; j < cont_elem ; j++){
+						int ind2 = elem[j];
+						if(dets[ind1].bbox.ind_class == 1){
+							if(dets[ind2].bbox.ind_class == 2){
+								init_locations(dets[ind2].bbox, im_dim, box2_pos);
+								if(cont_dist < 5){
+									dets[ind2].bbox.dist = box_min_distance(box1_pos, box2_pos);
+									possible_dist[cont_dist] = dets[ind2].bbox;
+									cont_dist++;
+								}
+								else{
+									dets[ind2].bbox.dist = box_min_distance(box1_pos, box2_pos);
+									//printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox.dist);
+									min_dist_array(possible_dist, dets[ind2].bbox);
+								}
+							}
+						}
+						else{
+							if(dets[ind2].bbox.ind_class == 1){
+								init_locations(dets[ind2].bbox, im_dim, box2_pos);
+								if(cont_dist < 5){
+									dets[ind2].bbox.dist = box_min_distance(box1_pos, box2_pos);
+									possible_dist[cont_dist] = dets[ind2].bbox;
+									cont_dist++;
+								}
+								else{
+									dets[ind2].bbox.dist = box_min_distance(box1_pos, box2_pos);
+									//printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox.dist);
+									min_dist_array(possible_dist, dets[ind2].bbox);
+								}
+							}
+						}
+					}
+					
+					sort_dist_array(possible_dist, cont_dist);
+					relation new_relation;
+					new_relation.ind_entrada = ind1;
+					new_relation.ind_salida = possible_dist[0].id_box;
+					new_relation.dist = possible_dist[0].dist;
+					obt_relations_len = add_solution(obt_relations, obt_relations_len, new_relation, cont_elem);
+					
+				}
+				else if(find == -1){
+					delete_max_relation(obt_relations, obt_relations_len, ind1);
+				}
+				
+				find = condition_satisfied(obt_relations, ind1, dets[ind1].bbox.ind_class, obt_relations_len, dets);
+			}
+
+		}
+		else if(dets[ind].bbox.ind_class == 0){
+			find = used_attribute(obt_relations, ind1, obt_relations_len);
+			while(!find){
+				box possible_dist[5]:
+				double box1_pos[16], box2_pos[16];
+				init_locations(dets[ind1].bbox, im_dim, box1_pos);
+				int cont_dist = 0;
+				for(j = 0 ; j < cont_elem; j++){
+					int ind2 = elem[j];
+					if(dets[ind2].bbox.ind_class != 0){
+						init_locations(dets[ind2].bbox, im_dim, box2_pos);
+						if(cont_dist < 5){
+							dets[ind2].bbox.dist = box_min_distance(box1_pos, box2_pos);
+							possible_dist[cont_dist] = dets[ind2].bbox;
+							cont_dist++;
+						}
+						else{
+							dets[ind2].bbox.dist = box_min_distance(box1_pos, box2_pos);
+							//printf("Bbox id: %d, Dist: %lf", dets[ind].bbox.id_box, dets[ind].bbox.dist);
+							min_dist_array(possible_dist, dets[ind2].bbox);
+						}
+					}
+				}
+				
+				sort_dist_array(possible_dist, cont_dist);
+				relation new_relation;
+				new_relation.ind_salida = possible_dist[0].id_box;
+				new_relation.dist = possible_dist[0].dist;
+				add_solution(obt_relations, obt_relations_len, new_relation, cont_elem);
+				find = used_attribute(obt_relations, ind1, obt_relations_len);
+			}
+		}
+	}
 	
 }
 
@@ -722,6 +905,9 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
             }
         }
     }
+	
+	
+	
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
 	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
 	printf("----------Relaciones obtenidas para solución----------\n");
