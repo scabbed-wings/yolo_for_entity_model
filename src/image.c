@@ -906,7 +906,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
         }
     }
 	
-	search_missing(obt_relations, pos_relations, dets, elem[], cont_elem, obt_relations_len, pos_relations_len, im_dim);
+	search_missing(obt_relations, pos_relations, dets, elem, cont_elem, obt_relations_len, pos_relations_len, im_dim);
 	
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
 	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
