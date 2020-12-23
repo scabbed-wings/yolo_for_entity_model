@@ -906,10 +906,13 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
         }
     }
 	
-	search_missing(obt_relations, pos_relations, dets, elem, cont_elem, obt_relations_len, pos_relations_len, im_dim);
-	
 	int obt_relations_len = relation_filled(obt_relations, cont_elem);
 	int pos_relations_len = relation_filled(pos_relations, cont_elem*2);
+	
+	search_missing(obt_relations, pos_relations, dets, elem, cont_elem, obt_relations_len, pos_relations_len, im_dim);
+	
+	obt_relations_len = relation_filled(obt_relations, cont_elem);
+	pos_relations_len = relation_filled(pos_relations, cont_elem*2);
 	printf("----------Relaciones obtenidas para solución----------\n");
 	for(i=0;i<obt_relations_len;i ++){
 		printf("Relation %d: Box %d y Box %d  Dist = %lf \n", obt_relations[i].id_box,  obt_relations[i].ind_entrada, obt_relations[i].ind_salida, obt_relations[i].dist);
