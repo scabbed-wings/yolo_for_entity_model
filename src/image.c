@@ -801,7 +801,7 @@ void init_relations(relations *relations, int num){
 	}
 }
 
-short json_exists(char filename[]){
+short json_exists(char *filename){
 	FILE *file;
 	if(file = fopen(filename, "r")){
 		fclose(file);
@@ -839,7 +839,7 @@ short there_is_more(int position, int ind_class, int elem[], int cont_elem, dete
 void create_json(relations *obt_relations, detection *dets, int elem[], int obt_relations_len, int cont_elem, int im_dim[]){
 	int  i, j, ind;
 	FILE *fptr;
-	int counter = 0;
+	int counter = 1;
 	char model[10];
 	int ternaries[cont_elem];
 	int count_ternaries = 0;
@@ -857,6 +857,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 		strcat(filename, model);
 		strcat(filename, ".json");
 		exists=json_exists(filename);
+		printf("File not found\n");
 	}
 	fptr = fopen(filename, "w");
 	fprintf(fptr, "{\n");
