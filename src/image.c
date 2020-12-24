@@ -462,7 +462,6 @@ void find_relations(relations *obt_relations, relations *pos_relations, detectio
 	//}
 	//printf("\n");
 	
-	
 	for(i=0;i<cont_elem;i++){
 		int ind = elem[i];
 		//printf("Ind_object: %d ", ind);
@@ -802,6 +801,261 @@ void init_relations(relations *relations, int num){
 	}
 }
 
+short json_exists(char filename[]){
+	FILE *file;
+	if(file = fopen(filename, "r")){
+		fclose(file);
+		return 1;
+	}
+	return 0;
+}
+
+short is_ternary(int id_box, relations *obt_relations, int obt_relations_len){
+	int i;
+	short find = 0;
+	int count = 0;
+	
+	for(i = 0; i < obt_relations_len; i++){
+		if(obt_relations[i].ind_salida == id_box || obt_relations[i].ind_entrada == id_box)
+			count++;
+	}
+	
+	if(count == 3) find = 1;
+	
+	return find;
+}
+
+short there_is_more(int position, int ind_class, int elem[], int cont_elem, detection *dets){
+	int i;
+	short find = 0;
+	for(i = pos + 1; i < cont_elem ; i++){
+		int ind = elem[i];
+		if(dets[ind].bbox.ind_class  == ind_class){
+			find = 1;
+		}
+	}
+	return find;
+}
+void create_json(relations *obt_relations, detection *dets, int elem[], int obt_relations_len, int cont_elem, int im_dim[]){
+	int  i, j, ind;
+	FILE *fptr;
+	int counter = 0;
+	char model[10];
+	int ternaries[cont_elem];
+	int count_ternaries = 0;
+	
+	char filename[80]="../data/model-";
+	strcat(filename, model);
+	strcat(filename, ".json");
+	short exists = json_exists(filename);
+	while(!exists){
+		filename ="../data/model-";
+		counter++;
+		sprintf(model, "%d", counter);
+		strcat(filename, model);
+		strcat(filename, ".json");
+		exists=json_exists(filename);
+	}
+	fptr = fopen(filename, "w");
+	fprintf(fptr, "{\n");
+	//Writing entities
+	fprintf(fptr, "\t\"Entities\": [\n");
+	for(i=0; i< cont_elem; i++){
+		ind = elem[i];
+		if(dets[ind].bbox.ind_class == 1){
+			fprintf(fptr,"\t\t{\n");
+			int x = (int) (dets[ind].bbox.x * im_dim[0]);
+			int y = (int) (dets[ind].bbox.y * im_dim[1]);
+			char num[50];
+			sprintf(num,"%d",x);
+			fprintf(fptr,"\t\t\t\"x\": \"%s\",\n", num);
+			sprintf(num,"%d",y);
+			fprintf(fptr,"\t\t\t\"y\": \"%s\",\n", num);
+			sprintf(num,"%d",ind);
+			fprintf(fptr,"\t\t\t\"name\": \"Entity%s\",\n",num);
+			fprintf(fptr,"\t\t\t\"type\": \"Normal\",\n");
+			fprintf(fptr,"\t\t\t\"id\": \"%s\"\n", num);
+			if(there_is_more(i, 1, elem, cont_elem, dets)){
+				fprintf(fptr,"\t\t},\n");
+			}
+			else{
+				fprintf(fptr,"\t\t}\n");
+			}
+			
+		}
+	}
+	fprintf(fptr,"\t],\n");
+	
+	//Writing relations
+	
+	fprintf("\t\"Relations\": [\n");
+	for(i = 0; i<cont_elem; i++){
+		ind = elem[i];
+		if(dets[ind].bbox.ind_class == 2){
+			if(is_ternary(ind, obt_relations, obt_relations_len)){
+				ternaries[count_ternaries] = ind;
+				count_ternaries++;
+			}
+			else{
+				fprintf("\t\t{\n");
+				char num[50];
+				int x = (int) (dets[ind].bbox.x * im_dim[0]);
+				int y = (int) (dets[ind].bbox.y * im_dim[1]);
+				int contr = 1;
+				sprintf(num,"%d",ind);
+				fprintf(fptr,"\t\t\t\"name\": \"Relation%s\",\n",num);
+				fprintf(fptr,"\t\t\t\"type\": \"Normal\",\n");
+				for(j=0; j<obt_relations_len;j++){
+					if(obt_relations[j].ind_entrada == ind && contr){
+						sprintf(num,"%d",obt_relations[j].ind_salida);
+						fprintf(fptr,"\t\t\t\"enter\": \"%s\",\n",num);
+						contr = 0;
+					}
+					else if(obt_relations[j].ind_salida == ind && contr){
+						sprintf(num,"%d",obt_relations[j].ind_entrada);
+						fprintf(fptr,"\t\t\t\"enter\": \"%s\",\n",num);
+						contr = 0;
+					} else if(obt_relations[j].ind_entrada == ind){
+						sprintf(num,"%d",obt_relations[j].ind_salida);
+						fprintf(fptr,"\t\t\t\"exit\": \"%s\",\n",num);
+					}
+					else if(obt_relations[j].ind_salida == ind){
+						sprintf(num,"%d",obt_relations[j].ind_entrada);
+						fprintf(fptr,"\t\t\t\"exit\": \"%s\",\n",num);
+					}
+				}
+				sprintf(num,"%d",ind);
+				fprintf(fptr,"\t\t\t\"id\": \"%s\",\n",num);
+				sprintf(num,"%d",x);
+				fprintf(fptr,"\t\t\t\"x\": \"%s\",\n", num);
+				sprintf(num,"%d",y);
+				fprintf(fptr,"\t\t\t\"y\": \"%s\",\n", num);
+				fprintf(fptr,"\t\t\t\"enterCard\": \"(0,N)\",\n");
+				fprintf(fptr,"\t\t\t\"exitCard\": \"(0,N)\"\n");
+				if(there_is_more(i, 2, elem, cont_elem, dets)){
+					fprintf(fptr,"\t\t},\n");
+				}
+				else{
+					fprintf(fptr,"\t\t}\n");
+				}
+			}
+		}
+	}
+	fprintf(fptr,"\t],\n");
+	
+	//Writing attributes
+	fprintf("\t\"Relations\": [\n");
+	for(i = 0; i < cont_elem; i++){
+		ind = elem[i];
+		if(dets[ind].bbox.ind_class == 0){
+			fprintf("\t\t{\n");
+			char num[50];
+			int x = (int) (dets[ind].bbox.x * im_dim[0]);
+			int y = (int) (dets[ind].bbox.y * im_dim[1]);
+			sprintf(num,"%d",ind);
+			fprintf(fptr,"\t\t\t\"name\": \"Attribute%s\",\n",num);
+			fprintf(fptr,"\t\t\t\"key\": \"false\",\n");
+			fprintf(fptr,"\t\t\t\"type\": \"Normal\",\n");
+			fprintf(fptr,"\t\t\t\"isCompound\": \"false\",\n");
+			fprintf(fptr,"\t\t\t\"isChild\": \"false\",\n");
+			fprintf(fptr,"\t\t\t\"id\": \"%s\",\n",num);
+			for(j = 0; j < obt_relations_len; j++){
+				if(obt_relations[j].ind_entrada == ind){
+					sprintf(num,"%d",obt_relations[j].ind_salida);
+					fprintf(fptr,"\t\t\t\"element\": \"%s\",\n",num);
+				}
+				else if(obt_relations[j].ind_salida == ind){
+					sprintf(num,"%d",obt_relations[j].ind_entrada);
+					fprintf(fptr,"\t\t\t\"element\": \"%s\",\n",num);
+				}
+			}
+			sprintf(num,"%d",x);
+			fprintf(fptr,"\t\t\t\"x\": \"%s\",\n", num);
+			sprintf(num,"%d",y);
+			fprintf(fptr,"\t\t\t\"y\": \"%s\"\n", num);
+			if(there_is_more(i, 0, elem, cont_elem, dets)){
+				fprintf(fptr,"\t\t},\n");
+			}
+			else{
+				fprintf(fptr,"\t\t}\n");
+			}
+		}
+	}
+	
+	//Writing ternaries
+	if(!count_ternaries){
+		fprintf(fptr,"\t]\n");
+	}
+	else{
+		fprintf(fptr,"\t],\n");
+		fprintf("\t\"Ternaries\": [\n");
+		for(i = 0; i < count_ternaries; i++){
+			ind = ternaries[i];
+			fprintf("\t\t{\n");
+			char num[50];
+			int count =0;
+			int x = (int) (dets[ind].bbox.x * im_dim[0]);
+			int y = (int) (dets[ind].bbox.y * im_dim[1]);
+			sprintf(num,"%d",ind);
+			fprintf(fptr,"\t\t\t\"name\": \"TernaryRelation%s\",\n",num);
+			fprintf(fptr,"\t\t\t\"id\": \"%s\",\n",num);
+			sprintf(num,"%d",x);
+			fprintf(fptr,"\t\t\t\"x\": \"%s\",\n", num);
+			sprintf(num,"%d",y);
+			fprintf(fptr,"\t\t\t\"y\": \"%s\",\n", num);
+			for(j =0; j < obt_relations_len; j++){
+				if(obt_relations[j].ind_entrada == ind && count == 0){
+					sprintf(num,"%d",obt_relations[j].ind_salida);
+					fprintf(fptr,"\t\t\t\"first\": \"%s\",\n",num);
+					count++;
+				}
+				else if(obt_relations[j].ind_salida == ind && count == 0){
+					sprintf(num,"%d",obt_relations[j].ind_entrada);
+					fprintf(fptr,"\t\t\t\"element\": \"%s\",\n",num);
+					count++;
+				} else if(obt_relations[j].ind_entrada == ind && count == 1){
+					sprintf(num,"%d",obt_relations[j].ind_salida);
+					fprintf(fptr,"\t\t\t\"second\": \"%s\",\n",num);
+					count++;
+				}
+				else if(obt_relations[j].ind_salida == ind && count == 1){
+					sprintf(num,"%d",obt_relations[j].ind_entrada);
+					fprintf(fptr,"\t\t\t\"second\": \"%s\",\n",num);
+					count++;
+				}else if(obt_relations[j].ind_entrada == ind && count == 2){
+					sprintf(num,"%d",obt_relations[j].ind_salida);
+					fprintf(fptr,"\t\t\t\"third\": \"%s\",\n",num);
+					count++;
+				}
+				else if(obt_relations[j].ind_salida == ind && count == 2){
+					sprintf(num,"%d",obt_relations[j].ind_entrada);
+					fprintf(fptr,"\t\t\t\"third\": \"%s\",\n",num);
+					count++;
+				}
+			}
+			fprintf(fptr,"\t\t\t\"cardFirst\": \"1\",\n");
+			fprintf(fptr,"\t\t\t\"cardSecond\": \"N\",\n");
+			fprintf(fptr,"\t\t\t\"cardThird\": \"M\"\n");
+			if((i+1) < count_ternaries){
+				fprintf(fptr,"\t\t},\n");
+			}
+			else{
+				fprintf(fptr,"\t\t}\n");
+			}
+		}
+		fprintf(fptr,"\t]\n");
+	}
+	
+	
+	
+	
+	
+	
+	fprintf(fptr, "}");
+	fclose(fptr);
+	
+	
+}
 void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes)
 {
     int i,j;
