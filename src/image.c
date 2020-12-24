@@ -844,8 +844,8 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	int ternaries[cont_elem];
 	int count_ternaries = 0;
 	
-	char filename[80];
-	filename = "../data/model-";
+	char filename[80] = {0};
+	strcat(filename,"../data/model-");
 	strcat(filename, model);
 	strcat(filename, ".json");
 	short exists = json_exists(filename);
@@ -1169,6 +1169,10 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 	
 	obt_relations_len = relation_filled(obt_relations, cont_elem);
 	pos_relations_len = relation_filled(pos_relations, cont_elem*2);
+	
+	create_json(obt_relations, dets, elem, obt_relations_len, cont_elem, im_dim);
+	
+	
 	printf("----------Relaciones obtenidas para solución----------\n");
 	for(i=0;i<obt_relations_len;i ++){
 		printf("Relation %d: Box %d y Box %d  Dist = %lf \n", obt_relations[i].id_box,  obt_relations[i].ind_entrada, obt_relations[i].ind_salida, obt_relations[i].dist);
