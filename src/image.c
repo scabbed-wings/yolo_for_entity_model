@@ -844,7 +844,8 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	int ternaries[cont_elem];
 	int count_ternaries = 0;
 	
-	char filename[80]="../data/model-";
+	char filename[80];
+	filename = "../data/model-";
 	strcat(filename, model);
 	strcat(filename, ".json");
 	short exists = json_exists(filename);
