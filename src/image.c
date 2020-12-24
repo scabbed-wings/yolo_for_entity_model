@@ -890,7 +890,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	
 	//Writing relations
 	
-	fprintf("\t\"Relations\": [\n");
+	fprintf(fptr,"\t\"Relations\": [\n");
 	for(i = 0; i<cont_elem; i++){
 		ind = elem[i];
 		if(dets[ind].bbox.ind_class == 2){
@@ -899,7 +899,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 				count_ternaries++;
 			}
 			else{
-				fprintf("\t\t{\n");
+				fprintf(fptr, "\t\t{\n");
 				char num[50];
 				int x = (int) (dets[ind].bbox.x * im_dim[0]);
 				int y = (int) (dets[ind].bbox.y * im_dim[1]);
@@ -946,11 +946,11 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	fprintf(fptr,"\t],\n");
 	
 	//Writing attributes
-	fprintf("\t\"Relations\": [\n");
+	fprintf(fptr, "\t\"Relations\": [\n");
 	for(i = 0; i < cont_elem; i++){
 		ind = elem[i];
 		if(dets[ind].bbox.ind_class == 0){
-			fprintf("\t\t{\n");
+			fprintf(fptr,"\t\t{\n");
 			char num[50];
 			int x = (int) (dets[ind].bbox.x * im_dim[0]);
 			int y = (int) (dets[ind].bbox.y * im_dim[1]);
@@ -990,10 +990,10 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	}
 	else{
 		fprintf(fptr,"\t],\n");
-		fprintf("\t\"Ternaries\": [\n");
+		fprintf(fptr"\t\"Ternaries\": [\n");
 		for(i = 0; i < count_ternaries; i++){
 			ind = ternaries[i];
-			fprintf("\t\t{\n");
+			fprintf(fptr,"\t\t{\n");
 			char num[50];
 			int count =0;
 			int x = (int) (dets[ind].bbox.x * im_dim[0]);
@@ -1048,15 +1048,8 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 		fprintf(fptr,"\t]\n");
 	}
 	
-	
-	
-	
-	
-	
 	fprintf(fptr, "}");
 	fclose(fptr);
-	
-	
 }
 void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes)
 {
