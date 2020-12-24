@@ -828,7 +828,7 @@ short is_ternary(int id_box, relations *obt_relations, int obt_relations_len){
 short there_is_more(int position, int ind_class, int elem[], int cont_elem, detection *dets){
 	int i;
 	short find = 0;
-	for(i = pos + 1; i < cont_elem ; i++){
+	for(i = position + 1; i < cont_elem ; i++){
 		int ind = elem[i];
 		if(dets[ind].bbox.ind_class  == ind_class){
 			find = 1;
