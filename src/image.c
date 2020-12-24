@@ -844,19 +844,15 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	int ternaries[cont_elem];
 	int count_ternaries = 0;
 	sprintf(model, "%d", counter);
-	char filename[250] = {0};
-	strcat(filename,"model-");
-	strcat(filename, model);
-	strcat(filename, ".json");
+	char filename[250];
+	sprintf(filename, "../data/model-%s.json",model);
 	printf("File: %s \n", filename);
 	short exists = json_exists(filename);
 	while(!exists){
 		memset(filename, 0, 80);
-		strcat(filename,"model-");
 		counter++;
 		sprintf(model, "%d", counter);
-		strcat(filename, model);
-		strcat(filename, ".json");
+		sprintf(filename, "../data/model-%s.json",model);
 		exists=json_exists(filename);
 		//printf("File not found\n");
 	}
