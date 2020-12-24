@@ -840,11 +840,11 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	int  i, j, ind;
 	FILE *fptr;
 	int counter = 1;
-	char model[10];
+	char model[80];
 	int ternaries[cont_elem];
 	int count_ternaries = 0;
 	sprintf(model, "%d", counter);
-	char filename[80] = {0};
+	char filename[250] = {0};
 	strcat(filename,"../data/model-");
 	strcat(filename, model);
 	strcat(filename, ".json");
