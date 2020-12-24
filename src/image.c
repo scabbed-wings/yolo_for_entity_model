@@ -856,7 +856,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 		//exists=json_exists(filename);
 		//printf("File not found\n");
 	//}
-	fptr = fopen("../data/model.json", "w");
+	fptr = fopen("model.json", "w");
 	fprintf(fptr, "{\n");
 	//Writing entities
 	fprintf(fptr, "\t\"Entities\": [\n");
