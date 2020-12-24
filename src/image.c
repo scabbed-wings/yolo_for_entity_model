@@ -801,7 +801,7 @@ void init_relations(relations *relations, int num){
 	}
 }
 
-short json_exists(char *filename){
+short json_exists(const char *filename){
 	FILE *file;
 	if(file = fopen(filename, "r")){
 		fclose(file);
