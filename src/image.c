@@ -907,21 +907,29 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 				fprintf(fptr,"\t\t\t\"type\": \"Normal\",\n");
 				for(j=0; j<obt_relations_len;j++){
 					if(obt_relations[j].ind_entrada == ind && contr){
-						sprintf(num,"%d",obt_relations[j].ind_salida);
-						fprintf(fptr,"\t\t\t\"enter\": \"%s\",\n",num);
-						contr = 0;
+							if(dets[obt_relations[j].ind_salida].bbox.ind_class == 1){
+							sprintf(num,"%d",obt_relations[j].ind_salida);
+							fprintf(fptr,"\t\t\t\"enter\": \"%s\",\n",num);
+							contr = 0;
+							}
 					}
 					else if(obt_relations[j].ind_salida == ind && contr){
-						sprintf(num,"%d",obt_relations[j].ind_entrada);
-						fprintf(fptr,"\t\t\t\"enter\": \"%s\",\n",num);
-						contr = 0;
+							if(dets[obt_relations[j].ind_entrada].bbox.ind_class == 1){
+								sprintf(num,"%d",obt_relations[j].ind_entrada);
+								fprintf(fptr,"\t\t\t\"enter\": \"%s\",\n",num);
+								contr = 0;
+							}
 					} else if(obt_relations[j].ind_entrada == ind){
-						sprintf(num,"%d",obt_relations[j].ind_salida);
-						fprintf(fptr,"\t\t\t\"exit\": \"%s\",\n",num);
+						if(dets[obt_relations[j].ind_salida].bbox.ind_class == 1){
+							sprintf(num,"%d",obt_relations[j].ind_salida);
+							fprintf(fptr,"\t\t\t\"exit\": \"%s\",\n",num);
+						}
 					}
 					else if(obt_relations[j].ind_salida == ind){
-						sprintf(num,"%d",obt_relations[j].ind_entrada);
-						fprintf(fptr,"\t\t\t\"exit\": \"%s\",\n",num);
+							if(dets[obt_relations[j].ind_entrada].bbox.ind_class == 1){
+								sprintf(num,"%d",obt_relations[j].ind_entrada);
+								fprintf(fptr,"\t\t\t\"exit\": \"%s\",\n",num);
+							}
 					}
 				}
 				sprintf(num,"%d",ind);
@@ -944,7 +952,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	fprintf(fptr,"\t],\n");
 	
 	//Writing attributes
-	fprintf(fptr, "\t\"Relations\": [\n");
+	fprintf(fptr, "\t\"Attributes\": [\n");
 	for(i = 0; i < cont_elem; i++){
 		ind = elem[i];
 		if(dets[ind].bbox.ind_class == 0){
