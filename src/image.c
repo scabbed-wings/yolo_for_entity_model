@@ -848,6 +848,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	strcat(filename,"../data/model-");
 	strcat(filename, model);
 	strcat(filename, ".json");
+	printf("File: %s \n", filename);
 	short exists = json_exists(filename);
 	while(!exists){
 		memset(filename, 0, 80);
@@ -857,7 +858,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 		strcat(filename, model);
 		strcat(filename, ".json");
 		exists=json_exists(filename);
-		printf("File not found\n");
+		//printf("File not found\n");
 	}
 	fptr = fopen(filename, "w");
 	fprintf(fptr, "{\n");
