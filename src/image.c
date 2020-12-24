@@ -991,68 +991,64 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	}
 	
 	//Writing ternaries
-	if(!count_ternaries){
-		fprintf(fptr,"\t]\n");
-	}
-	else{
-		fprintf(fptr,"\t],\n");
-		fprintf(fptr,"\t\"Ternaries\": [\n");
-		for(i = 0; i < count_ternaries; i++){
-			ind = ternaries[i];
-			fprintf(fptr,"\t\t{\n");
-			char num[50];
-			int count =0;
-			int x = (int) (dets[ind].bbox.x * im_dim[0]);
-			int y = (int) (dets[ind].bbox.y * im_dim[1]);
-			sprintf(num,"%d",ind);
-			fprintf(fptr,"\t\t\t\"name\": \"TernaryRelation%s\",\n",num);
-			fprintf(fptr,"\t\t\t\"id\": \"%s\",\n",num);
-			sprintf(num,"%d",x);
-			fprintf(fptr,"\t\t\t\"x\": \"%s\",\n", num);
-			sprintf(num,"%d",y);
-			fprintf(fptr,"\t\t\t\"y\": \"%s\",\n", num);
-			for(j =0; j < obt_relations_len; j++){
-				if(obt_relations[j].ind_entrada == ind && count == 0){
-					sprintf(num,"%d",obt_relations[j].ind_salida);
-					fprintf(fptr,"\t\t\t\"first\": \"%s\",\n",num);
-					count++;
-				}
-				else if(obt_relations[j].ind_salida == ind && count == 0){
-					sprintf(num,"%d",obt_relations[j].ind_entrada);
-					fprintf(fptr,"\t\t\t\"element\": \"%s\",\n",num);
-					count++;
-				} else if(obt_relations[j].ind_entrada == ind && count == 1){
-					sprintf(num,"%d",obt_relations[j].ind_salida);
-					fprintf(fptr,"\t\t\t\"second\": \"%s\",\n",num);
-					count++;
-				}
-				else if(obt_relations[j].ind_salida == ind && count == 1){
-					sprintf(num,"%d",obt_relations[j].ind_entrada);
-					fprintf(fptr,"\t\t\t\"second\": \"%s\",\n",num);
-					count++;
-				}else if(obt_relations[j].ind_entrada == ind && count == 2){
-					sprintf(num,"%d",obt_relations[j].ind_salida);
-					fprintf(fptr,"\t\t\t\"third\": \"%s\",\n",num);
-					count++;
-				}
-				else if(obt_relations[j].ind_salida == ind && count == 2){
-					sprintf(num,"%d",obt_relations[j].ind_entrada);
-					fprintf(fptr,"\t\t\t\"third\": \"%s\",\n",num);
-					count++;
-				}
+	fprintf(fptr,"\t],\n");
+	fprintf(fptr,"\t\"Ternaries\": [\n");
+	for(i = 0; i < count_ternaries; i++){
+		ind = ternaries[i];
+		fprintf(fptr,"\t\t{\n");
+		char num[50];
+		int count =0;
+		int x = (int) (dets[ind].bbox.x * im_dim[0]);
+		int y = (int) (dets[ind].bbox.y * im_dim[1]);
+		sprintf(num,"%d",ind);
+		fprintf(fptr,"\t\t\t\"name\": \"TernaryRelation%s\",\n",num);
+		fprintf(fptr,"\t\t\t\"id\": \"%s\",\n",num);
+		sprintf(num,"%d",x);
+		fprintf(fptr,"\t\t\t\"x\": \"%s\",\n", num);
+		sprintf(num,"%d",y);
+		fprintf(fptr,"\t\t\t\"y\": \"%s\",\n", num);
+		for(j =0; j < obt_relations_len; j++){
+			if(obt_relations[j].ind_entrada == ind && count == 0){
+				sprintf(num,"%d",obt_relations[j].ind_salida);
+				fprintf(fptr,"\t\t\t\"first\": \"%s\",\n",num);
+				count++;
 			}
-			fprintf(fptr,"\t\t\t\"cardFirst\": \"1\",\n");
-			fprintf(fptr,"\t\t\t\"cardSecond\": \"N\",\n");
-			fprintf(fptr,"\t\t\t\"cardThird\": \"M\"\n");
-			if((i+1) < count_ternaries){
-				fprintf(fptr,"\t\t},\n");
+			else if(obt_relations[j].ind_salida == ind && count == 0){
+				sprintf(num,"%d",obt_relations[j].ind_entrada);
+				fprintf(fptr,"\t\t\t\"element\": \"%s\",\n",num);
+				count++;
+			} else if(obt_relations[j].ind_entrada == ind && count == 1){
+				sprintf(num,"%d",obt_relations[j].ind_salida);
+				fprintf(fptr,"\t\t\t\"second\": \"%s\",\n",num);
+				count++;
 			}
-			else{
-				fprintf(fptr,"\t\t}\n");
+			else if(obt_relations[j].ind_salida == ind && count == 1){
+				sprintf(num,"%d",obt_relations[j].ind_entrada);
+				fprintf(fptr,"\t\t\t\"second\": \"%s\",\n",num);
+				count++;
+			}else if(obt_relations[j].ind_entrada == ind && count == 2){
+				sprintf(num,"%d",obt_relations[j].ind_salida);
+				fprintf(fptr,"\t\t\t\"third\": \"%s\",\n",num);
+				count++;
+			}
+			else if(obt_relations[j].ind_salida == ind && count == 2){
+				sprintf(num,"%d",obt_relations[j].ind_entrada);
+				fprintf(fptr,"\t\t\t\"third\": \"%s\",\n",num);
+				count++;
 			}
 		}
-		fprintf(fptr,"\t]\n");
+		fprintf(fptr,"\t\t\t\"cardFirst\": \"1\",\n");
+		fprintf(fptr,"\t\t\t\"cardSecond\": \"N\",\n");
+		fprintf(fptr,"\t\t\t\"cardThird\": \"M\"\n");
+		if((i+1) < count_ternaries){
+			fprintf(fptr,"\t\t},\n");
+		}
+		else{
+			fprintf(fptr,"\t\t}\n");
+		}
 	}
+	fprintf(fptr,"\t]\n");
+	
 	
 	fprintf(fptr, "}");
 	fclose(fptr);
