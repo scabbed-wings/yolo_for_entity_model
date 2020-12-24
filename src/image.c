@@ -990,7 +990,7 @@ void create_json(relations *obt_relations, detection *dets, int elem[], int obt_
 	}
 	else{
 		fprintf(fptr,"\t],\n");
-		fprintf(fptr"\t\"Ternaries\": [\n");
+		fprintf(fptr,"\t\"Ternaries\": [\n");
 		for(i = 0; i < count_ternaries; i++){
 			ind = ternaries[i];
 			fprintf(fptr,"\t\t{\n");
