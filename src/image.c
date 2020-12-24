@@ -839,24 +839,24 @@ short there_is_more(int position, int ind_class, int elem[], int cont_elem, dete
 void create_json(relations *obt_relations, detection *dets, int elem[], int obt_relations_len, int cont_elem, int im_dim[]){
 	int  i, j, ind;
 	FILE *fptr;
-	int counter = 1;
+	//int counter = 1;
 	char model[80];
 	int ternaries[cont_elem];
 	int count_ternaries = 0;
-	sprintf(model, "%d", counter);
-	char filename[250];
-	sprintf(filename, "model-%s.json",model);
-	printf("File: %s \n", filename);
-	short exists = json_exists(filename);
-	while(!exists){
-		memset(filename, 0, 80);
-		counter++;
-		sprintf(model, "%d", counter);
-		sprintf(filename, "model-%s.json",model);
-		exists=json_exists(filename);
+	//sprintf(model, "%d", counter);
+	//char filename[250];
+	//sprintf(filename, "model-%s.json",model);
+	//printf("File: %s \n", filename);
+	//short exists = json_exists(filename);
+	//while(!exists){
+		//memset(filename, 0, 80);
+		//counter++;
+		//sprintf(model, "%d", counter);
+		//sprintf(filename, "model-%s.json",model);
+		//exists=json_exists(filename);
 		//printf("File not found\n");
-	}
-	fptr = fopen(filename, "w");
+	//}
+	fptr = fopen("../data/model.json", "w");
 	fprintf(fptr, "{\n");
 	//Writing entities
 	fprintf(fptr, "\t\"Entities\": [\n");
